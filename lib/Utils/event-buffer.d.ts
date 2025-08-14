@@ -1,5 +1,5 @@
-import { BaileysEventEmitter, BaileysEventMap } from '../Types';
-import { ILogger } from './logger';
+import type { BaileysEventEmitter, BaileysEventMap } from '../Types';
+import type { ILogger } from './logger';
 /**
  * A map that contains a list of all events that have been triggered
  *
@@ -10,16 +10,15 @@ import { ILogger } from './logger';
 type BaileysEventData = Partial<BaileysEventMap>;
 type BaileysBufferableEventEmitter = BaileysEventEmitter & {
     /** Use to process events in a batch */
-    process(handler: (events: BaileysEventData) => void | Promise<void>): (() => void);
+    process(handler: (events: BaileysEventData) => void | Promise<void>): () => void;
     /**
      * starts buffering events, call flush() to release them
      * */
     buffer(): void;
     /** buffers all events till the promise completes */
-    createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): ((...args: A) => Promise<T>);
+    createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): (...args: A) => Promise<T>;
     /**
      * flushes all buffered events
-     * @param force if true, will flush all data regardless of any pending buffers
      * @returns returns true if the flush actually happened, otherwise false
      */
     flush(): boolean;
