@@ -33,6 +33,7 @@
     "axios": "^1.6.0",
     "libsignal": "github:neoxr/sgn",
     "lodash": "^4.17.21",
+    "lru-cache": "^10.4.3",
     "music-metadata": "^7.12.3",
     "pino": "^9.6",
     "protobufjs": "^7.2.4",
