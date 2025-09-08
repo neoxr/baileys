@@ -43,8 +43,6 @@ export declare const MEDIA_HKDF_KEY_MAPPING: {
 export declare const MEDIA_KEYS: MediaType[];
 export declare const MIN_PREKEY_COUNT = 5;
 export declare const INITIAL_PREKEY_COUNT = 30;
-export declare const UPLOAD_TIMEOUT = 30000;
-export declare const MIN_UPLOAD_INTERVAL = 5000;
 export declare const DEFAULT_CACHE_TTLS: {
     SIGNAL_STORE: number;
     MSG_RETRY: number;

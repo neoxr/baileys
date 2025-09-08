@@ -18,11 +18,6 @@ export declare const NACK_REASONS: {
     UnsupportedLIDGroup: number;
     DBOperationFailed: number;
 };
-export declare const extractAddressingContext: (stanza: BinaryNode) => {
-    addressingMode: string;
-    senderAlt: string;
-    recipientAlt: string;
-};
 /**
  * Decode the received node as a message.
  * @note this will only parse the message, not decrypt it
