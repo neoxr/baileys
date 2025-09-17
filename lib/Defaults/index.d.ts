@@ -1,7 +1,10 @@
 import { proto } from '../../WAProto';
-import type { MediaType, SocketConfig } from '../Types';
+import type { SocketConfig } from '../Types';
+export type MediaType = keyof typeof MEDIA_HKDF_KEY_MAPPING;
 export declare const UNAUTHORIZED_CODES: number[];
 export declare const DEFAULT_ORIGIN = "https://web.whatsapp.com";
+export declare const CALL_VIDEO_PREFIX = "https://call.whatsapp.com/video/";
+export declare const CALL_AUDIO_PREFIX = "https://call.whatsapp.com/voice/";
 export declare const DEF_CALLBACK_PREFIX = "CB:";
 export declare const DEF_TAG_PREFIX = "TAG:";
 export declare const PHONE_CONNECTION_CB = "CB:Pong";
