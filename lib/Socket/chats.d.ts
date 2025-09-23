@@ -1,10 +1,14 @@
 import { Boom } from '@hapi/boom';
-import { proto } from '../../WAProto';
+import { proto } from '../../WAProto/index.js';
 import type { BotListInfo, ChatModification, MessageUpsertType, SocketConfig, WABusinessProfile, WAMediaUpload, WAMessage, WAPatchCreate, WAPresence, WAPrivacyCallValue, WAPrivacyGroupAddValue, WAPrivacyMessagesValue, WAPrivacyOnlineValue, WAPrivacyValue, WAReadReceiptsValue } from '../Types';
+import type { QuickReplyAction } from '../Types/Bussines.js';
 import type { LabelActionBody } from '../Types/Label';
 import { type BinaryNode } from '../WABinary';
 import { USyncQuery } from '../WAUSync';
 export declare const makeChatsSocket: (config: SocketConfig) => {
+    createCallLink: (type: "audio" | "video", event?: {
+        startTime: number;
+    }, timeoutMs?: number) => Promise<string | undefined>;
     getBotListV2: () => Promise<BotListInfo[]>;
     processingMutex: {
         mutex<T>(code: () => Promise<T> | T): Promise<T>;
@@ -17,11 +21,6 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     sendPresenceUpdate: (type: WAPresence, toJid?: string) => Promise<void>;
     presenceSubscribe: (toJid: string, tcToken?: Buffer) => Promise<void>;
     profilePictureUrl: (jid: string, type?: "preview" | "image", timeoutMs?: number) => Promise<string | undefined>;
-    onWhatsApp: (...jids: string[]) => Promise<{
-        jid: string;
-        exists: unknown;
-        lid: unknown;
-    }[] | undefined>;
     fetchBlocklist: () => Promise<string[]>;
     fetchStatus: (...jids: string[]) => Promise<import("../WAUSync").USyncQueryResultList[] | undefined>;
     fetchDisappearingDuration: (...jids: string[]) => Promise<import("../WAUSync").USyncQueryResultList[] | undefined>;
@@ -44,7 +43,7 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     updateGroupsAddPrivacy: (value: WAPrivacyGroupAddValue) => Promise<void>;
     updateDefaultDisappearingMode: (duration: number) => Promise<void>;
     getBusinessProfile: (jid: string) => Promise<WABusinessProfile | void>;
-    resyncAppState: (collections: readonly ("critical_block" | "critical_unblock_low" | "regular_high" | "regular_low" | "regular")[], isInitialSync: boolean) => Promise<void>;
+    resyncAppState: (collections: readonly ("critical_unblock_low" | "regular_high" | "regular_low" | "critical_block" | "regular")[], isInitialSync: boolean) => Promise<void>;
     chatModify: (mod: ChatModification, jid: string) => Promise<void>;
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
     addOrEditContact: (jid: string, contact: proto.SyncActionValue.IContactAction) => Promise<void>;
@@ -58,9 +57,10 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
         id: string;
         fromMe?: boolean;
     }[], star: boolean) => Promise<void>;
-    executeUSyncQuery: (usyncQuery: USyncQuery) => Promise<import("../WAUSync").USyncQueryResult | undefined>;
+    addOrEditQuickReply: (quickReply: QuickReplyAction) => Promise<void>;
+    removeQuickReply: (timestamp: string) => Promise<void>;
     type: "md";
-    ws: import("./Client").WebSocketClient;
+    ws: import("./Client/websocket.js").WebSocketClient;
     ev: import("../Types").BaileysEventEmitter & {
         process(handler: (events: Partial<import("../Types").BaileysEventMap>) => void | Promise<void>): () => void;
         buffer(): void;
@@ -72,20 +72,26 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
         creds: import("../Types").AuthenticationCreds;
         keys: import("../Types").SignalKeyStoreWithTransaction;
     };
-    signalRepository: import("../Types").SignalRepository;
+    signalRepository: import("../Types").SignalRepositoryWithLIDStore;
     user: import("../Types").Contact | undefined;
     generateMessageTag: () => string;
-    query: (node: BinaryNode, timeoutMs?: number) => Promise<BinaryNode>;
-    waitForMessage: <T>(msgId: string, timeoutMs?: number | undefined) => Promise<any>;
+    query: (node: BinaryNode, timeoutMs?: number) => Promise<any>;
+    waitForMessage: <T>(msgId: string, timeoutMs?: number | undefined) => Promise<T | undefined>;
     waitForSocketOpen: () => Promise<void>;
     sendRawMessage: (data: Uint8Array | Buffer) => Promise<void>;
     sendNode: (frame: BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
     end: (error: Error | undefined) => void;
     onUnexpectedError: (err: Error | Boom, msg: string) => void;
-    uploadPreKeys: (count?: number) => Promise<void>;
+    uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
     waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
-    sendWAMBuffer: (wamBuffer: Buffer) => Promise<BinaryNode>;
+    sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
+    executeUSyncQuery: (usyncQuery: USyncQuery) => Promise<import("../WAUSync").USyncQueryResult | undefined>;
+    onWhatsApp: (...jids: string[]) => Promise<{
+        jid: string;
+        exists: boolean;
+        lid: string;
+    }[] | undefined>;
 };

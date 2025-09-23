@@ -1,6 +1,6 @@
-import { AxiosRequestConfig } from 'axios';
-import { WAMediaUploadFunction, WAUrlInfo } from '../Types';
-import { ILogger } from './logger';
+import type { AxiosRequestConfig } from 'axios';
+import type { WAMediaUploadFunction, WAUrlInfo } from '../Types';
+import type { ILogger } from './logger';
 export type URLGenerationOptions = {
     thumbnailWidth: number;
     fetchOpts: {

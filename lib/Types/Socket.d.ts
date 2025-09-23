@@ -1,23 +1,31 @@
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 import type { Agent } from 'https';
 import type { URL } from 'url';
-import { proto } from '../../WAProto';
-import { ILogger } from '../Utils/logger';
-import { AuthenticationState, SignalAuthState, TransactionCapabilityOptions } from './Auth';
-import { GroupMetadata } from './GroupMetadata';
-import { MediaConnInfo } from './Message';
-import { SignalRepository } from './Signal';
+import { proto } from '../../WAProto/index.js';
+import type { ILogger } from '../Utils/logger';
+import type { AuthenticationState, SignalAuthState, TransactionCapabilityOptions } from './Auth';
+import type { GroupMetadata } from './GroupMetadata';
+import { type MediaConnInfo } from './Message';
+import type { SignalRepositoryWithLIDStore } from './Signal';
 export type WAVersion = [number, number, number];
 export type WABrowserDescription = [string, string, string];
 export type CacheStore = {
     /** get a cached key and change the stats */
-    get<T>(key: string): T | undefined;
+    get<T>(key: string): Promise<T> | T | undefined;
     /** set a key in the cache */
-    set<T>(key: string, value: T): void;
+    set<T>(key: string, value: T): Promise<void> | void | number | boolean;
     /** delete a key from the cache */
-    del(key: string): void;
+    del(key: string): void | Promise<void> | number | boolean;
     /** flush all data */
-    flushAll(): void;
+    flushAll(): void | Promise<void>;
+};
+export type PossiblyExtendedCacheStore = CacheStore & {
+    mget?: <T>(keys: string[]) => Promise<Record<string, T | undefined>>;
+    mset?: <T>(entries: {
+        key: string;
+        value: T;
+    }[]) => Promise<void> | void | number | boolean;
+    mdel?: (keys: string[]) => void | Promise<void> | number | boolean;
 };
 export type PatchedMessageWithRecipientJID = proto.IMessage & {
     recipientJid?: string;
@@ -33,7 +41,7 @@ export type SocketConfig = {
     keepAliveIntervalMs: number;
     /** should baileys use the mobile api instead of the multi device api
      * @deprecated This feature has been removed
-    */
+     */
     mobile?: boolean;
     /** proxy agent */
     agent?: Agent;
@@ -45,8 +53,10 @@ export type SocketConfig = {
     browser: WABrowserDescription;
     /** agent used for fetch requests -- uploading/downloading media */
     fetchAgent?: Agent;
-    /** should the QR be printed in the terminal */
-    printQRInTerminal: boolean;
+    /** should the QR be printed in the terminal
+     * @deprecated This feature has been removed
+     */
+    printQRInTerminal?: boolean;
     /** should events be emitted for actions done by this socket connection */
     emitOwnEvents: boolean;
     /** custom upload hosts to upload media to */
@@ -74,7 +84,7 @@ export type SocketConfig = {
      * used to determine whether to retry a message or not */
     msgRetryCounterCache?: CacheStore;
     /** provide a cache to store a user's device list */
-    userDevicesCache?: CacheStore;
+    userDevicesCache?: PossiblyExtendedCacheStore;
     /** cache to store call offers */
     callOfferCache?: CacheStore;
     /** cache to track placeholder resends */
@@ -90,6 +100,10 @@ export type SocketConfig = {
      * entails uploading the jpegThumbnail to WA
      * */
     generateHighQualityLinkPreview: boolean;
+    /** Enable automatic session recreation for failed messages */
+    enableAutoSessionRecreation: boolean;
+    /** Enable recent message caching for retry handling */
+    enableRecentMessageCache: boolean;
     /**
      * Returns if a jid should be ignored,
      * no event for that jid will be triggered.
@@ -115,5 +129,9 @@ export type SocketConfig = {
     getMessage: (key: proto.IMessageKey) => Promise<proto.IMessage | undefined>;
     /** cached group metadata, use to prevent redundant requests to WA & speed up msg sending */
     cachedGroupMetadata: (jid: string) => Promise<GroupMetadata | undefined>;
-    makeSignalRepository: (auth: SignalAuthState) => SignalRepository;
+    makeSignalRepository: (auth: SignalAuthState, onWhatsAppFunc?: (...jids: string[]) => Promise<{
+        jid: string;
+        exists: boolean;
+        lid: string;
+    }[] | undefined>) => SignalRepositoryWithLIDStore;
 };

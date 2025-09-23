@@ -1,9 +1,9 @@
-import { AxiosRequestConfig } from 'axios';
-import { proto } from '../../WAProto';
-import { BaileysEventEmitter, BaileysEventMap, BrowsersMap, ConnectionState, WACallUpdateType, WAVersion } from '../Types';
-import { BinaryNode } from '../WABinary';
+import { type AxiosRequestConfig } from 'axios';
+import { proto } from '../../WAProto/index.js';
+import type { BaileysEventEmitter, BaileysEventMap, BrowsersMap, ConnectionState, WACallUpdateType, WAVersion } from '../Types';
+import { type BinaryNode } from '../WABinary';
 export declare const Browsers: BrowsersMap;
-export declare const getPlatformId: (browser: string) => any;
+export declare const getPlatformId: (browser: string) => string;
 export declare const BufferJSON: {
     replacer: (k: any, value: any) => any;
     reviver: (_: any, value: any) => any;
@@ -11,6 +11,7 @@ export declare const BufferJSON: {
 export declare const getKeyAuthor: (key: proto.IMessageKey | undefined | null, meId?: string) => string;
 export declare const writeRandomPadMax16: (msg: Uint8Array) => Buffer<ArrayBuffer>;
 export declare const unpadRandomMax16: (e: Uint8Array | Buffer) => Uint8Array<ArrayBuffer>;
+export declare const generateParticipantHashV2: (participants: string[]) => string;
 export declare const encodeWAMessage: (message: proto.IMessage) => Buffer<ArrayBuffer>;
 export declare const generateRegistrationId: () => number;
 export declare const encodeBigEndian: (e: number, t?: number) => Uint8Array<ArrayBuffer>;
@@ -34,7 +35,6 @@ export declare const generateMessageIDV2: (userId?: string) => string;
 export declare const generateMessageID: () => string;
 export declare function bindWaitForEvent<T extends keyof BaileysEventMap>(ev: BaileysEventEmitter, event: T): (check: (u: BaileysEventMap[T]) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
 export declare const bindWaitForConnectionUpdate: (ev: BaileysEventEmitter) => (check: (u: Partial<ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
-export declare const printQRIfNecessaryListener: (ev: BaileysEventEmitter) => void;
 /**
  * utility that fetches latest baileys version from the master branch.
  * Use to ensure your WA connection is always on the latest version
@@ -82,7 +82,7 @@ export declare const getCodeFromWSError: (error: Error) => number;
  * Is the given platform WA business
  * @param platform AuthenticationCreds.platform
  */
-export declare const isWABusinessPlatform: (platform: string) => platform is "smbi" | "smba";
+export declare const isWABusinessPlatform: (platform: string) => platform is "smba" | "smbi";
 export declare function trimUndefined(obj: {
     [_: string]: any;
 }): {

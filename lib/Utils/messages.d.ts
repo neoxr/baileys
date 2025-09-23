@@ -1,8 +1,8 @@
 import { type Transform } from 'stream';
-import { proto } from '../../WAProto';
-import { AnyMediaMessageContent, AnyMessageContent, MediaGenerationOptions, MessageContentGenerationOptions, MessageGenerationOptions, MessageGenerationOptionsFromContent, MessageUserReceipt, WAMessage, WAMessageContent, WAProto } from '../Types';
-import { ILogger } from './logger';
-import { MediaDownloadOptions } from './messages-media';
+import { proto } from '../../WAProto/index.js';
+import type { AnyMediaMessageContent, AnyMessageContent, MessageContentGenerationOptions, MessageGenerationOptions, MessageGenerationOptionsFromContent, MessageUserReceipt, WAMessage, WAMessageContent } from '../Types';
+import type { ILogger } from './logger';
+import { type MediaDownloadOptions } from './messages-media';
 /**
  * Uses a regex to test whether the string contains a URL, and returns the URL if it does.
  * @param text eg. hello https://google.com
@@ -10,7 +10,7 @@ import { MediaDownloadOptions } from './messages-media';
  */
 export declare const extractUrlFromText: (text: string) => string | undefined;
 export declare const generateLinkPreviewIfRequired: (text: string, getUrlInfo: MessageGenerationOptions["getUrlInfo"], logger: MessageGenerationOptions["logger"]) => Promise<import("../Types").WAUrlInfo | undefined>;
-export declare const prepareWAMessageMedia: (message: AnyMediaMessageContent, options: MediaGenerationOptions) => Promise<proto.Message>;
+export declare const prepareWAMessageMedia: (message: AnyMediaMessageContent, options: MessageContentGenerationOptions) => Promise<proto.Message>;
 export declare const prepareDisappearingMessageSettingContent: (ephemeralExpiration?: number) => proto.Message;
 /**
  * Generate forwarded message content like WA does
@@ -22,7 +22,7 @@ export declare const generateWAMessageContent: (message: AnyMessageContent, opti
 export declare const generateWAMessageFromContent: (jid: string, message: WAMessageContent, options: MessageGenerationOptionsFromContent) => proto.WebMessageInfo;
 export declare const generateWAMessage: (jid: string, content: AnyMessageContent, options: MessageGenerationOptions) => Promise<proto.WebMessageInfo>;
 /** Get the key to access the true type of content */
-export declare const getContentType: (content: WAProto.IMessage | undefined) => keyof proto.IMessage | undefined;
+export declare const getContentType: (content: proto.IMessage | undefined) => keyof proto.IMessage | undefined;
 /**
  * Normalizes ephemeral, view once messages to regular message content
  * Eg. image messages in ephemeral messages, in view once messages etc.
@@ -38,7 +38,7 @@ export declare const extractMessageContent: (content: WAMessageContent | undefin
 /**
  * Returns the device predicted by message ID
  */
-export declare const getDevice: (id: string) => "android" | "unknown" | "web" | "ios" | "desktop";
+export declare const getDevice: (id: string) => "web" | "unknown" | "android" | "ios" | "desktop";
 /** Upserts a receipt in the message */
 export declare const updateMessageWithReceipt: (msg: Pick<WAMessage, "userReceipt">, receipt: MessageUserReceipt) => void;
 /** Update the message with a new reaction */

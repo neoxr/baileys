@@ -1,28 +1,33 @@
-import { Contact } from './Contact';
-export type GroupParticipant = (Contact & {
+import type { Contact } from './Contact';
+import type { WAMessageAddressingMode } from './Message';
+export type GroupParticipant = Contact & {
     isAdmin?: boolean;
     isSuperAdmin?: boolean;
     admin?: 'admin' | 'superadmin' | null;
-});
+};
 export type ParticipantAction = 'add' | 'remove' | 'promote' | 'demote' | 'modify';
 export type RequestJoinAction = 'created' | 'revoked' | 'rejected';
 export type RequestJoinMethod = 'invite_link' | 'linked_group_join' | 'non_admin_add' | undefined;
 export interface GroupMetadata {
     id: string;
+    notify?: string;
     /** group uses 'lid' or 'pn' to send messages */
-    addressingMode: "pn" | "lid";
+    addressingMode?: WAMessageAddressingMode;
     owner: string | undefined;
-    ownerJid?: string | undefined;
-    owner_country_code: string;
+    ownerPn?: string | undefined;
+    owner_country_code?: string | undefined;
     subject: string;
     /** group subject owner */
     subjectOwner?: string;
+    subjectOwnerPn?: string;
     /** group subject modification date */
     subjectTime?: number;
     creation?: number;
     desc?: string;
     descOwner?: string;
+    descOwnerPn?: string;
     descId?: string;
+    descTime?: number;
     /** if this group is part of a community, it returns the jid of the community to which it belongs */
     linkedParent?: string;
     /** is set when the group only allows admins to change group settings */

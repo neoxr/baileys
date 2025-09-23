@@ -1,8 +1,8 @@
-import { AxiosRequestConfig } from 'axios';
-import { proto } from '../../WAProto';
-import { BaileysEventEmitter, ChatModification, ChatMutation, Contact, InitialAppStateSyncOptions, LTHashState, WAPatchCreate, WAPatchName } from '../Types';
-import { BinaryNode } from '../WABinary';
-import { ILogger } from './logger';
+import type { AxiosRequestConfig } from 'axios';
+import { proto } from '../../WAProto/index.js';
+import type { BaileysEventEmitter, ChatModification, ChatMutation, Contact, InitialAppStateSyncOptions, LTHashState, WAPatchCreate, WAPatchName } from '../Types';
+import { type BinaryNode } from '../WABinary';
+import type { ILogger } from './logger';
 type FetchAppStateSyncKey = (keyId: string) => Promise<proto.Message.IAppStateSyncKeyData | null | undefined>;
 export type ChatMutationMap = {
     [index: string]: ChatMutation;
@@ -13,7 +13,7 @@ export declare const encodeSyncdPatch: ({ type, index, syncAction, apiVersion, o
     state: LTHashState;
 }>;
 export declare const decodeSyncdMutations: (msgMutations: (proto.ISyncdMutation | proto.ISyncdRecord)[], initialState: LTHashState, getAppStateSyncKey: FetchAppStateSyncKey, onMutation: (mutation: ChatMutation) => void, validateMacs: boolean) => Promise<{
-    hash: Buffer<any>;
+    hash: Buffer<ArrayBuffer>;
     indexValueMap: {
         [indexMacBase64: string]: {
             valueMac: Uint8Array | Buffer;
@@ -21,7 +21,7 @@ export declare const decodeSyncdMutations: (msgMutations: (proto.ISyncdMutation 
     };
 }>;
 export declare const decodeSyncdPatch: (msg: proto.ISyncdPatch, name: WAPatchName, initialState: LTHashState, getAppStateSyncKey: FetchAppStateSyncKey, onMutation: (mutation: ChatMutation) => void, validateMacs: boolean) => Promise<{
-    hash: Buffer<any>;
+    hash: Buffer<ArrayBuffer>;
     indexValueMap: {
         [indexMacBase64: string]: {
             valueMac: Uint8Array | Buffer;
@@ -29,11 +29,6 @@ export declare const decodeSyncdPatch: (msg: proto.ISyncdPatch, name: WAPatchNam
     };
 }>;
 export declare const extractSyncdPatches: (result: BinaryNode, options: AxiosRequestConfig<{}>) => Promise<{
-    critical_block: {
-        patches: proto.ISyncdPatch[];
-        hasMorePatches: boolean;
-        snapshot?: proto.ISyncdSnapshot;
-    };
     critical_unblock_low: {
         patches: proto.ISyncdPatch[];
         hasMorePatches: boolean;
@@ -45,6 +40,11 @@ export declare const extractSyncdPatches: (result: BinaryNode, options: AxiosReq
         snapshot?: proto.ISyncdSnapshot;
     };
     regular_low: {
+        patches: proto.ISyncdPatch[];
+        hasMorePatches: boolean;
+        snapshot?: proto.ISyncdSnapshot;
+    };
+    critical_block: {
         patches: proto.ISyncdPatch[];
         hasMorePatches: boolean;
         snapshot?: proto.ISyncdSnapshot;

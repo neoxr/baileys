@@ -1,21 +1,25 @@
 import { Boom } from '@hapi/boom';
-import { AxiosRequestConfig } from 'axios';
-import type { Logger } from 'pino';
+import { type AxiosRequestConfig } from 'axios';
 import { Readable, Transform } from 'stream';
 import { URL } from 'url';
-import { proto } from '../../WAProto';
+import { proto } from '../../WAProto/index.js';
 import { type MediaType } from '../Defaults';
-import { DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, SocketConfig, WAMediaUpload, WAMediaUploadFunction, WAMessageContent } from '../Types';
-import { BinaryNode } from '../WABinary';
-import { ILogger } from './logger';
+import type { DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, SocketConfig, WAMediaUpload, WAMediaUploadFunction, WAMessageContent } from '../Types';
+import { type BinaryNode } from '../WABinary';
+import type { ILogger } from './logger';
 export declare const hkdfInfoKey: (type: MediaType) => string;
+export declare const getRawMediaUploadData: (media: WAMediaUpload, mediaType: MediaType, logger?: ILogger) => Promise<{
+    filePath: string;
+    fileSha256: Buffer<ArrayBufferLike>;
+    fileLength: number;
+}>;
 /** generates all the keys required to encrypt/decrypt & sign a media message */
 export declare function getMediaKeys(buffer: Uint8Array | string | null | undefined, mediaType: MediaType): Promise<MediaDecryptionKeyInfo>;
 export declare const extractImageThumb: (bufferOrFilePath: Readable | Buffer | string, width?: number) => Promise<{
-    buffer: Buffer<ArrayBufferLike>;
+    buffer: any;
     original: {
-        width: number | undefined;
-        height: number | undefined;
+        width: any;
+        height: any;
     };
 }>;
 export declare const encodeBase64EncodedStringForUpload: (b64: string) => string;
@@ -60,29 +64,19 @@ export declare function generateThumbnail(file: string, mediaType: 'video' | 'im
 export declare const getHttpStream: (url: string | URL, options?: AxiosRequestConfig & {
     isStream?: true;
 }) => Promise<Readable>;
-export declare const prepareStream: (media: WAMediaUpload, mediaType: MediaType, { logger, saveOriginalFileIfRequired, opts }?: EncryptedStreamOptions) => Promise<{
-    mediaKey: undefined;
-    encWriteStream: Buffer<ArrayBuffer>;
-    fileLength: number;
-    fileSha256: Buffer<ArrayBufferLike>;
-    fileEncSha256: undefined;
-    bodyPath: string | undefined;
-    didSaveToTmpPath: boolean;
-}>;
 type EncryptedStreamOptions = {
     saveOriginalFileIfRequired?: boolean;
-    logger?: Logger;
+    logger?: ILogger;
     opts?: AxiosRequestConfig;
 };
 export declare const encryptedStream: (media: WAMediaUpload, mediaType: MediaType, { logger, saveOriginalFileIfRequired, opts }?: EncryptedStreamOptions) => Promise<{
     mediaKey: Buffer<ArrayBufferLike>;
-    encWriteStream: Readable;
-    bodyPath: string | undefined;
+    originalFilePath: string | undefined;
+    encFilePath: string;
     mac: Buffer<ArrayBuffer>;
     fileEncSha256: Buffer<ArrayBufferLike>;
     fileSha256: Buffer<ArrayBufferLike>;
     fileLength: number;
-    didSaveToTmpPath: boolean;
 }>;
 export type MediaDownloadOptions = {
     startByte?: number;
@@ -114,5 +108,5 @@ export declare const decryptMediaRetryData: ({ ciphertext, iv }: {
     ciphertext: Uint8Array;
     iv: Uint8Array;
 }, mediaKey: Uint8Array, msgId: string) => Promise<proto.MediaRetryNotification>;
-export declare const getStatusCodeForMediaRetry: (code: number) => any;
+export declare const getStatusCodeForMediaRetry: (code: number) => 200 | 412 | 404 | 418;
 export {};

@@ -1,5 +1,5 @@
 import makeWASocket from './Socket';
-export * from '../WAProto';
+export * from '../WAProto/index.js';
 export * from './Utils';
 export * from './Types';
 export * from './Defaults';

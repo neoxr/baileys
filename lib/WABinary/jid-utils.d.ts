@@ -17,11 +17,11 @@ export declare const jidEncode: (user: string | number | null, server: JidServer
 export declare const jidDecode: (jid: string | undefined) => FullJid | undefined;
 /** is the jid a user */
 export declare const areJidsSameUser: (jid1: string | undefined, jid2: string | undefined) => boolean;
-/** is the jid Meta IA */
-export declare const isJidMetaIa: (jid: string | undefined) => boolean | undefined;
-/** is the jid a user */
-export declare const isJidUser: (jid: string | undefined) => boolean | undefined;
-/** is the jid a group */
+/** is the jid Meta AI */
+export declare const isJidMetaAI: (jid: string | undefined) => boolean | undefined;
+/** is the jid a PN user */
+export declare const isPnUser: (jid: string | undefined) => boolean | undefined;
+/** is the jid a LID */
 export declare const isLidUser: (jid: string | undefined) => boolean | undefined;
 /** is the jid a broadcast */
 export declare const isJidBroadcast: (jid: string | undefined) => boolean | undefined;
@@ -33,3 +33,4 @@ export declare const isJidStatusBroadcast: (jid: string) => jid is "status@broad
 export declare const isJidNewsletter: (jid: string | undefined) => boolean | undefined;
 export declare const isJidBot: (jid: string | undefined) => boolean | "" | undefined;
 export declare const jidNormalizedUser: (jid: string | undefined) => string;
+export declare const transferDevice: (fromJid: string, toJid: string) => string;

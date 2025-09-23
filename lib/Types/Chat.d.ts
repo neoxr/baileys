@@ -1,5 +1,6 @@
-import type { proto } from '../../WAProto';
+import type { proto } from '../../WAProto/index.js';
 import type { AccountSettings } from './Auth';
+import type { QuickReplyAction } from './Bussines.js';
 import type { BufferedEventData } from './Events';
 import type { LabelActionBody } from './Label';
 import type { ChatLabelAssociationActionBody } from './LabelAssociation';
@@ -15,7 +16,7 @@ export type WAPrivacyMessagesValue = 'all' | 'contacts';
 /** set of statuses visible to other people; see updatePresence() in WhatsAppWeb.Send */
 export type WAPresence = 'unavailable' | 'available' | 'composing' | 'recording' | 'paused';
 export declare const ALL_WA_PATCH_NAMES: readonly ["critical_block", "critical_unblock_low", "regular_high", "regular_low", "regular"];
-export type WAPatchName = typeof ALL_WA_PATCH_NAMES[number];
+export type WAPatchName = (typeof ALL_WA_PATCH_NAMES)[number];
 export interface PresenceData {
     lastKnownPresence: WAPresence;
     lastSeen?: number;
@@ -50,6 +51,8 @@ export type ChatUpdate = Partial<Chat & {
      * undefined if the condition is not yet fulfilled
      * */
     conditional: (bufferedData: BufferedEventData) => boolean | undefined;
+    /** last update time */
+    timestamp?: number;
 }>;
 /**
  * the last messages in a chat, sorted reverse-chronologically. That is, the latest message should be first in the chat
@@ -103,6 +106,8 @@ export type ChatModification = {
     addMessageLabel: MessageLabelAssociationActionBody;
 } | {
     removeMessageLabel: MessageLabelAssociationActionBody;
+} | {
+    quickReply: QuickReplyAction;
 };
 export type InitialReceivedChatsState = {
     [jid: string]: {

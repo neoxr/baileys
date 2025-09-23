@@ -1,12 +1,11 @@
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 import type { Readable } from 'stream';
 import type { URL } from 'url';
-import { proto } from '../../WAProto';
+import { proto } from '../../WAProto/index.js';
 import type { MediaType } from '../Defaults';
-import { BinaryNode } from '../WABinary';
+import type { BinaryNode } from '../WABinary';
 import type { GroupMetadata } from './GroupMetadata';
-import { CacheStore } from './Socket';
-import type { Logger } from 'pino';
+import type { CacheStore } from './Socket';
 export { proto as WAProto };
 export type WAMessage = proto.IWebMessageInfo & {
     key: WAMessageKey;
@@ -15,10 +14,9 @@ export type WAMessageContent = proto.IMessage;
 export type WAContactMessage = proto.Message.IContactMessage;
 export type WAContactsArrayMessage = proto.Message.IContactsArrayMessage;
 export type WAMessageKey = proto.IMessageKey & {
-    senderLid?: string;
-    senderPn?: string;
-    participantLid?: string;
-    participantPn?: string;
+    remoteJidAlt?: string;
+    participantAlt?: string;
+    server_id?: string;
     isViewOnce?: boolean;
 };
 export type WATextMessage = proto.Message.IExtendedTextMessage;
@@ -27,6 +25,7 @@ export type WALocationMessage = proto.Message.ILocationMessage;
 export type WAGenericMediaMessage = proto.Message.IVideoMessage | proto.Message.IImageMessage | proto.Message.IAudioMessage | proto.Message.IDocumentMessage | proto.Message.IStickerMessage;
 export declare const WAMessageStubType: typeof proto.WebMessageInfo.StubType;
 export declare const WAMessageStatus: typeof proto.WebMessageInfo.Status;
+import type { ILogger } from '../Utils/logger';
 export type WAMediaPayloadURL = {
     url: URL | string;
 };
@@ -36,6 +35,10 @@ export type WAMediaPayloadStream = {
 export type WAMediaUpload = Buffer | WAMediaPayloadStream | WAMediaPayloadURL;
 /** Set of message types that are supported by the library */
 export type MessageType = keyof proto.Message;
+export declare enum WAMessageAddressingMode {
+    PN = "pn",
+    LID = "lid"
+}
 export type MessageWithContextInfo = 'imageMessage' | 'contactMessage' | 'locationMessage' | 'extendedTextMessage' | 'documentMessage' | 'audioMessage' | 'videoMessage' | 'call' | 'contactsArrayMessage' | 'liveLocationMessage' | 'templateMessage' | 'stickerMessage' | 'groupInviteMessage' | 'templateButtonReplyMessage' | 'productMessage' | 'listMessage' | 'orderMessage' | 'listResponseMessage' | 'buttonsMessage' | 'buttonsResponseMessage' | 'interactiveMessage' | 'interactiveResponseMessage' | 'pollCreationMessage' | 'requestPhoneNumberMessage' | 'messageHistoryBundle' | 'eventMessage' | 'newsletterAdminInviteMessage' | 'albumMessage' | 'stickerPackMessage' | 'pollResultSnapshotMessage' | 'messageHistoryNotice';
 export type DownloadableMessage = {
     mediaKey?: Uint8Array | null;
@@ -72,23 +75,6 @@ type Contextable = {
 type ViewOnce = {
     viewOnce?: boolean;
 };
-type Buttonable = {
-    /** add buttons to the message  */
-    buttons?: proto.Message.ButtonsMessage.IButton[];
-};
-type Templatable = {
-    /** add buttons to the message (conflicts with normal buttons)*/
-    templateButtons?: proto.IHydratedTemplateButton[];
-    footer?: string;
-};
-type Listable = {
-    /** Sections of the List */
-    sections?: proto.Message.ListMessage.ISection[];
-    /** Title of a List Message only */
-    title?: string;
-    /** Text of the bnutton on the list (required) */
-    buttonText?: string;
-};
 type Editable = {
     edit?: WAMessageKey;
 };
@@ -103,8 +89,18 @@ export type PollMessageOptions = {
     /** 32 byte message secret to encrypt poll selections */
     messageSecret?: Uint8Array;
     toAnnouncementGroup?: boolean;
-    /** the message you want to quote */
-    mentions?: any;
+};
+export type EventMessageOptions = {
+    name: string;
+    description?: string;
+    startDate: Date;
+    endDate?: Date;
+    location?: WALocationMessage;
+    call?: 'audio' | 'video';
+    isCancelled?: boolean;
+    isScheduleCall?: boolean;
+    extraGuestsAllowed?: boolean;
+    messageSecret?: Uint8Array<ArrayBufferLike>;
 };
 type SharePhoneNumber = {
     sharePhoneNumber: boolean;
@@ -116,14 +112,14 @@ export type AnyMediaMessageContent = (({
     image: WAMediaUpload;
     caption?: string;
     jpegThumbnail?: string;
-} & Mentionable & Contextable & Buttonable & Templatable & WithDimensions) | ({
+} & Mentionable & Contextable & WithDimensions) | ({
     video: WAMediaUpload;
     caption?: string;
     gifPlayback?: boolean;
     jpegThumbnail?: string;
     /** if set to true, will send as a `video note` */
     ptv?: boolean;
-} & Mentionable & Contextable & Buttonable & Templatable & WithDimensions) | {
+} & Mentionable & Contextable & WithDimensions) | {
     audio: WAMediaUpload;
     /** if set to true, will send as a `voice note` */
     ptt?: boolean;
@@ -137,7 +133,7 @@ export type AnyMediaMessageContent = (({
     mimetype: string;
     fileName?: string;
     caption?: string;
-} & Contextable & Buttonable & Templatable)) & {
+} & Contextable)) & {
     mimetype?: string;
 } & Editable;
 export type ButtonReplyInfo = {
@@ -158,9 +154,11 @@ export type WASendableProduct = Omit<proto.Message.ProductMessage.IProductSnapsh
 export type AnyRegularMessageContent = (({
     text: string;
     linkPreview?: WAUrlInfo | null;
-} & Mentionable & Contextable & Buttonable & Templatable & Listable & Editable) | AnyMediaMessageContent | ({
+} & Mentionable & Contextable & Editable) | AnyMediaMessageContent | {
+    event: EventMessageOptions;
+} | ({
     poll: PollMessageOptions;
-} & Mentionable & Contextable & Buttonable & Templatable & Editable) | {
+} & Mentionable & Contextable & Editable) | {
     contacts: {
         displayName?: string;
         contacts: proto.Message.IContactMessage[];
@@ -242,19 +240,19 @@ export type MiscMessageGenerationOptions = MinimalRelayOptions & {
 export type MessageGenerationOptionsFromContent = MiscMessageGenerationOptions & {
     userJid: string;
 };
-export type WAMediaUploadFunctionOpts = {
+export type WAMediaUploadFunction = (encFilePath: string, opts: {
     fileEncSha256B64: string;
     mediaType: MediaType;
-    newsletter?: boolean;
     timeoutMs?: number;
-};
-export type WAMediaUploadFunction = (readStream: Readable | Buffer, opts: WAMediaUploadFunctionOpts) => Promise<{
+}) => Promise<{
     mediaUrl: string;
     directPath: string;
-    handle?: string;
+    meta_hmac?: string;
+    ts?: number;
+    fbid?: number;
 }>;
 export type MediaGenerationOptions = {
-    logger?: Logger;
+    logger?: ILogger;
     mediaTypeOverride?: MediaType;
     upload: WAMediaUploadFunction;
     /** cache media so it does not have to be uploaded again */
@@ -263,11 +261,14 @@ export type MediaGenerationOptions = {
     options?: AxiosRequestConfig;
     backgroundColor?: string;
     font?: number;
-    newsletter?: boolean;
 };
 export type MessageContentGenerationOptions = MediaGenerationOptions & {
     getUrlInfo?: (text: string) => Promise<WAUrlInfo | undefined>;
     getProfilePicUrl?: (jid: string, type: 'image' | 'preview') => Promise<string | undefined>;
+    getCallLink?: (type: 'audio' | 'video', event?: {
+        startTime: number;
+    }) => Promise<string | undefined>;
+    jid?: string;
 };
 export type MessageGenerationOptions = MessageContentGenerationOptions & MessageGenerationOptionsFromContent;
 /**

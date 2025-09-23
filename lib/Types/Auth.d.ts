@@ -1,4 +1,4 @@
-import type { proto } from '../../WAProto';
+import type { proto } from '../../WAProto/index.js';
 import type { Contact } from './Contact';
 import type { MinimalMessage } from './Message';
 export type KeyPair = {
@@ -62,13 +62,14 @@ export type AuthenticationCreds = SignalCreds & {
 };
 export type SignalDataTypeMap = {
     'pre-key': KeyPair;
-    'session': Uint8Array;
+    session: Uint8Array;
     'sender-key': Uint8Array;
     'sender-key-memory': {
         [jid: string]: boolean;
     };
     'app-state-sync-key': proto.Message.IAppStateSyncKeyData;
     'app-state-sync-version': LTHashState;
+    'lid-mapping': string;
 };
 export type SignalDataSet = {
     [T in keyof SignalDataTypeMap]?: {
@@ -86,7 +87,7 @@ export type SignalKeyStore = {
 };
 export type SignalKeyStoreWithTransaction = SignalKeyStore & {
     isInTransaction: () => boolean;
-    transaction<T>(exec: () => Promise<T>): Promise<T>;
+    transaction<T>(exec: () => Promise<T>, key: string): Promise<T>;
 };
 export type TransactionCapabilityOptions = {
     maxCommitRetries: number;

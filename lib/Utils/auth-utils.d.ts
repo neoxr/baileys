@@ -1,5 +1,5 @@
 import type { AuthenticationCreds, CacheStore, SignalKeyStore, SignalKeyStoreWithTransaction, TransactionCapabilityOptions } from '../Types';
-import { ILogger } from './logger';
+import type { ILogger } from './logger';
 /**
  * Adds caching capability to a SignalKeyStore
  * @param store the store to add caching to

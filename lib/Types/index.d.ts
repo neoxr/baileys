@@ -4,14 +4,14 @@ export * from './Chat';
 export * from './Contact';
 export * from './State';
 export * from './Message';
-export * from './Newsletter';
 export * from './Socket';
 export * from './Events';
 export * from './Product';
 export * from './Call';
 export * from './Signal';
-import { AuthenticationState } from './Auth';
-import { SocketConfig } from './Socket';
+export * from './Newsletter';
+import type { AuthenticationState } from './Auth';
+import type { SocketConfig } from './Socket';
 export type UserFacingSocketConfig = Partial<SocketConfig> & {
     auth: AuthenticationState;
 };
