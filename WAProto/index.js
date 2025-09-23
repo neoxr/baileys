@@ -1,11 +1,11 @@
 /*eslint-disable block-scoped-var, id-length, no-control-regex, no-magic-numbers, no-prototype-builtins, no-redeclare, no-shadow, no-var, sort-vars*/
-import $protobuf from "protobufjs/minimal.js";
+var $protobuf = require("protobufjs/minimal.js");
 
 const $Reader = $protobuf.Reader, $Writer = $protobuf.Writer, $util = $protobuf.util;
 
 const $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
 
-export const proto = $root.proto = (() => {
+$root.proto = (function() {
 
     const proto = {};
 
@@ -37303,4 +37303,4 @@ export const proto = $root.proto = (() => {
     return proto;
 })();
 
-export { $root as default };
+module.exports = $root;
