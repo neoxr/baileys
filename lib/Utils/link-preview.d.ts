@@ -1,6 +1,6 @@
 import type { AxiosRequestConfig } from 'axios';
-import type { WAMediaUploadFunction, WAUrlInfo } from '../Types';
-import type { ILogger } from './logger';
+import type { WAMediaUploadFunction, WAUrlInfo } from '../Types/index.js';
+import type { ILogger } from './logger.js';
 export type URLGenerationOptions = {
     thumbnailWidth: number;
     fetchOpts: {
@@ -19,3 +19,4 @@ export type URLGenerationOptions = {
  * @returns the URL info required to generate link preview
  */
 export declare const getUrlInfo: (text: string, opts?: URLGenerationOptions) => Promise<WAUrlInfo | undefined>;
+//# sourceMappingURL=link-preview.d.ts.map

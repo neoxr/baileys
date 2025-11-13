@@ -1,14 +1,14 @@
 import type { Boom } from '@hapi/boom';
 import { proto } from '../../WAProto/index.js';
-import type { AuthenticationCreds } from './Auth';
-import type { WACallEvent } from './Call';
-import type { Chat, ChatUpdate, PresenceData } from './Chat';
-import type { Contact } from './Contact';
-import type { GroupMetadata, ParticipantAction, RequestJoinAction, RequestJoinMethod } from './GroupMetadata';
-import type { Label } from './Label';
-import type { LabelAssociation } from './LabelAssociation';
-import type { MessageUpsertType, MessageUserReceiptUpdate, WAMessage, WAMessageKey, WAMessageUpdate } from './Message';
-import type { ConnectionState } from './State';
+import type { AuthenticationCreds } from './Auth.js';
+import type { WACallEvent } from './Call.js';
+import type { Chat, ChatUpdate, PresenceData } from './Chat.js';
+import type { Contact } from './Contact.js';
+import type { GroupMetadata, ParticipantAction, RequestJoinAction, RequestJoinMethod } from './GroupMetadata.js';
+import type { Label } from './Label.js';
+import type { LabelAssociation } from './LabelAssociation.js';
+import type { MessageUpsertType, MessageUserReceiptUpdate, WAMessage, WAMessageKey, WAMessageUpdate } from './Message.js';
+import type { ConnectionState } from './State.js';
 export type BaileysEventMap = {
     /** connection state has been updated -- WS closed, opened, connecting etc. */
     'connection.update': Partial<ConnectionState>;
@@ -196,3 +196,4 @@ export interface BaileysEventEmitter {
     removeAllListeners<T extends keyof BaileysEventMap>(event: T): void;
     emit<T extends keyof BaileysEventMap>(event: T, arg: BaileysEventMap[T]): boolean;
 }
+//# sourceMappingURL=Events.d.ts.map

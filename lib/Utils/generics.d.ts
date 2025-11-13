@@ -1,7 +1,7 @@
 import { type AxiosRequestConfig } from 'axios';
 import { proto } from '../../WAProto/index.js';
-import type { BaileysEventEmitter, BaileysEventMap, BrowsersMap, ConnectionState, WACallUpdateType, WAVersion } from '../Types';
-import { type BinaryNode } from '../WABinary';
+import type { BaileysEventEmitter, BaileysEventMap, BrowsersMap, ConnectionState, WACallUpdateType, WAVersion } from '../Types/index.js';
+import { type BinaryNode } from '../WABinary/index.js';
 export declare const Browsers: BrowsersMap;
 export declare const getPlatformId: (browser: string) => string;
 export declare const BufferJSON: {
@@ -46,7 +46,7 @@ export declare const fetchLatestBaileysVersion: (options?: AxiosRequestConfig<{}
 } | {
     version: WAVersion;
     isLatest: boolean;
-    error: any;
+    error: unknown;
 }>;
 /**
  * A utility that fetches the latest web version of whatsapp.
@@ -59,7 +59,7 @@ export declare const fetchLatestWaWebVersion: (options: AxiosRequestConfig<{}>) 
 } | {
     version: WAVersion;
     isLatest: boolean;
-    error: any;
+    error: unknown;
 }>;
 /** unique message tag prefix for MD clients */
 export declare const generateMdTagPrefix: () => string;
@@ -67,7 +67,7 @@ export declare const generateMdTagPrefix: () => string;
  * Given a type of receipt, returns what the new status of the message should be
  * @param type type from receipt
  */
-export declare const getStatusFromReceiptType: (type: string | undefined) => proto.WebMessageInfo.Status;
+export declare const getStatusFromReceiptType: (type: string | undefined) => proto.WebMessageInfo.Status | undefined;
 /**
  * Stream errors generally provide a reason, map that to a baileys DisconnectReason
  * @param reason the string reason given, eg. "conflict"
@@ -90,3 +90,4 @@ export declare function trimUndefined(obj: {
 };
 export declare function bytesToCrockford(buffer: Buffer): string;
 export declare function encodeNewsletterMessage(message: proto.IMessage): Uint8Array;
+//# sourceMappingURL=generics.d.ts.map

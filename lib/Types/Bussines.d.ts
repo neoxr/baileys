@@ -22,3 +22,4 @@ export type UpdateBussinesProfileProps = {
 export type QuickReplyAction = proto.SyncActionValue.IQuickReplyAction & {
     timestamp?: string;
 };
+//# sourceMappingURL=Bussines.d.ts.map

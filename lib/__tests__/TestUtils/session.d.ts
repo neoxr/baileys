@@ -4,7 +4,7 @@
  * @returns An object with the authentication state and a cleanup function.
  */
 export declare const makeSession: () => Promise<{
-    state: import("../..").AuthenticationState;
+    state: import("../../index.js").AuthenticationState;
     saveCreds: () => Promise<void>;
     /**
      * Cleans up the temporary session files.

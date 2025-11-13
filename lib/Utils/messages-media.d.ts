@@ -3,14 +3,14 @@ import { type AxiosRequestConfig } from 'axios';
 import { Readable, Transform } from 'stream';
 import { URL } from 'url';
 import { proto } from '../../WAProto/index.js';
-import { type MediaType } from '../Defaults';
-import type { DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, SocketConfig, WAMediaUpload, WAMediaUploadFunction, WAMessageContent } from '../Types';
-import { type BinaryNode } from '../WABinary';
-import type { ILogger } from './logger';
+import { type MediaType } from '../Defaults/index.js';
+import type { DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, SocketConfig, WAMediaUpload, WAMediaUploadFunction, WAMessageContent } from '../Types/index.js';
+import { type BinaryNode } from '../WABinary/index.js';
+import type { ILogger } from './logger.js';
 export declare const hkdfInfoKey: (type: MediaType) => string;
 export declare const getRawMediaUploadData: (media: WAMediaUpload, mediaType: MediaType, logger?: ILogger) => Promise<{
     filePath: string;
-    fileSha256: Buffer<ArrayBufferLike>;
+    fileSha256: NonSharedBuffer;
     fileLength: number;
 }>;
 /** generates all the keys required to encrypt/decrypt & sign a media message */
@@ -70,12 +70,12 @@ type EncryptedStreamOptions = {
     opts?: AxiosRequestConfig;
 };
 export declare const encryptedStream: (media: WAMediaUpload, mediaType: MediaType, { logger, saveOriginalFileIfRequired, opts }?: EncryptedStreamOptions) => Promise<{
-    mediaKey: Buffer<ArrayBufferLike>;
+    mediaKey: NonSharedBuffer;
     originalFilePath: string | undefined;
     encFilePath: string;
     mac: Buffer<ArrayBuffer>;
-    fileEncSha256: Buffer<ArrayBufferLike>;
-    fileSha256: Buffer<ArrayBufferLike>;
+    fileEncSha256: NonSharedBuffer;
+    fileSha256: NonSharedBuffer;
     fileLength: number;
 }>;
 export type MediaDownloadOptions = {
@@ -97,7 +97,7 @@ export declare const getWAUploadToServer: ({ customUploadHosts, fetchAgent, logg
  */
 export declare const encryptMediaRetryRequest: (key: proto.IMessageKey, mediaKey: Buffer | Uint8Array, meId: string) => Promise<BinaryNode>;
 export declare const decodeMediaRetryNode: (node: BinaryNode) => {
-    key: import("../Types").WAMessageKey;
+    key: import("../Types/index.js").WAMessageKey;
     media?: {
         ciphertext: Uint8Array;
         iv: Uint8Array;
@@ -110,3 +110,4 @@ export declare const decryptMediaRetryData: ({ ciphertext, iv }: {
 }, mediaKey: Uint8Array, msgId: string) => Promise<proto.MediaRetryNotification>;
 export declare const getStatusCodeForMediaRetry: (code: number) => 200 | 412 | 404 | 418;
 export {};
+//# sourceMappingURL=messages-media.d.ts.map

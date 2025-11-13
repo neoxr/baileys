@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig } from 'axios';
 import { proto } from '../../WAProto/index.js';
-import type { AuthenticationCreds, BaileysEventEmitter, CacheStore, SignalKeyStoreWithTransaction, SignalRepositoryWithLIDStore } from '../Types';
-import type { ILogger } from './logger';
+import type { AuthenticationCreds, BaileysEventEmitter, CacheStore, SignalKeyStoreWithTransaction, SignalRepositoryWithLIDStore } from '../Types/index.js';
+import type { ILogger } from './logger.js';
 type ProcessMessageContext = {
     shouldProcessHistoryMsg: boolean;
     placeholderResendCache?: CacheStore;
@@ -40,3 +40,4 @@ type PollContext = {
 export declare function decryptPollVote({ encPayload, encIv }: proto.Message.IPollEncValue, { pollCreatorJid, pollMsgId, pollEncKey, voterJid }: PollContext): proto.Message.PollVoteMessage;
 declare const processMessage: (message: proto.IWebMessageInfo, { shouldProcessHistoryMsg, placeholderResendCache, ev, creds, signalRepository, keyStore, logger, options }: ProcessMessageContext) => Promise<void>;
 export default processMessage;
+//# sourceMappingURL=process-message.d.ts.map

@@ -1,5 +1,5 @@
 import { proto } from '../../WAProto/index.js';
-import type { LIDMappingStore } from '../Signal/lid-mapping';
+import type { LIDMappingStore } from '../Signal/lid-mapping.js';
 type DecryptGroupSignalOpts = {
     group: string;
     authorJid: string;
@@ -83,3 +83,4 @@ export interface SignalRepositoryWithLIDStore extends SignalRepository {
     lidMapping: LIDMappingStore;
 }
 export {};
+//# sourceMappingURL=Signal.d.ts.map

@@ -1,5 +1,5 @@
 import type { proto } from '../../WAProto/index.js';
-import type { ILogger } from './logger';
+import type { ILogger } from './logger.js';
 export interface RecentMessageKey {
     to: string;
     id: string;
@@ -79,3 +79,4 @@ export declare class MessageRetryManager {
     cancelPendingPhoneRequest(messageId: string): void;
     private keyToString;
 }
+//# sourceMappingURL=message-retry-manager.d.ts.map

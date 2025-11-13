@@ -1,5 +1,5 @@
-import type { BaileysEventEmitter, BaileysEventMap } from '../Types';
-import type { ILogger } from './logger';
+import type { BaileysEventEmitter, BaileysEventMap } from '../Types/index.js';
+import type { ILogger } from './logger.js';
 /**
  * A map that contains a list of all events that have been triggered
  *
@@ -31,3 +31,4 @@ type BaileysBufferableEventEmitter = BaileysEventEmitter & {
  */
 export declare const makeEventBuffer: (logger: ILogger) => BaileysBufferableEventEmitter;
 export {};
+//# sourceMappingURL=event-buffer.d.ts.map

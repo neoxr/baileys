@@ -1,4 +1,4 @@
-import type { SignalKeyStoreWithTransaction } from '../Types';
+import type { SignalKeyStoreWithTransaction } from '../Types/index.js';
 export declare class LIDMappingStore {
     private readonly mappingCache;
     private readonly keys;
@@ -24,3 +24,4 @@ export declare class LIDMappingStore {
      */
     getPNForLID(lid: string): Promise<string | null>;
 }
+//# sourceMappingURL=lid-mapping.d.ts.map

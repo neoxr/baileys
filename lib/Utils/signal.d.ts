@@ -1,7 +1,7 @@
-import type { SignalRepositoryWithLIDStore } from '../Types';
-import type { AuthenticationCreds, AuthenticationState, KeyPair, SignalIdentity, SignalKeyStore, SignedKeyPair } from '../Types';
-import { type BinaryNode, type JidWithDevice } from '../WABinary';
-import type { USyncQueryResultList } from '../WAUSync';
+import type { SignalRepositoryWithLIDStore } from '../Types/index.js';
+import type { AuthenticationCreds, AuthenticationState, KeyPair, SignalIdentity, SignalKeyStore, SignedKeyPair } from '../Types/Auth.js';
+import { type BinaryNode, type JidWithDevice } from '../WABinary/index.js';
+import type { USyncQueryResultList } from '../WAUSync/index.js';
 export declare const createSignalIdentity: (wid: string, accountSignatureKey: Uint8Array) => SignalIdentity;
 export declare const getPreKeys: ({ get }: SignalKeyStore, min: number, limit: number) => Promise<{
     [id: string]: KeyPair;
@@ -31,3 +31,4 @@ export declare const getNextPreKeysNode: (state: AuthenticationState, count: num
     update: Partial<AuthenticationCreds>;
     node: BinaryNode;
 }>;
+//# sourceMappingURL=signal.d.ts.map

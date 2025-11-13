@@ -1,6 +1,6 @@
-import type { USyncQueryProtocol } from '../Types/USync';
-import { type BinaryNode } from '../WABinary';
-import { USyncUser } from './USyncUser';
+import type { USyncQueryProtocol } from '../Types/USync.js';
+import { type BinaryNode } from '../WABinary/index.js';
+import { USyncUser } from './USyncUser.js';
 export type USyncQueryResultList = {
     [protocol: string]: unknown;
     id: string;
@@ -26,3 +26,4 @@ export declare class USyncQuery {
     withBotProfileProtocol(): this;
     withLIDProtocol(): this;
 }
+//# sourceMappingURL=USyncQuery.d.ts.map

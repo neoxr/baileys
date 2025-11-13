@@ -34,3 +34,4 @@ export declare const isJidNewsletter: (jid: string | undefined) => boolean | und
 export declare const isJidBot: (jid: string | undefined) => boolean | "" | undefined;
 export declare const jidNormalizedUser: (jid: string | undefined) => string;
 export declare const transferDevice: (fromJid: string, toJid: string) => string;
+//# sourceMappingURL=jid-utils.d.ts.map

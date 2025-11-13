@@ -1,5 +1,5 @@
-import type { Contact } from './Contact';
-import type { WAMessageAddressingMode } from './Message';
+import type { Contact } from './Contact.js';
+import type { WAMessageAddressingMode } from './Message.js';
 export type GroupParticipant = Contact & {
     isAdmin?: boolean;
     isSuperAdmin?: boolean;
@@ -63,3 +63,4 @@ export interface GroupModificationResponse {
         [key: string]: {};
     };
 }
+//# sourceMappingURL=GroupMetadata.d.ts.map

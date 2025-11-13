@@ -1,6 +1,6 @@
 import type { proto } from '../../WAProto/index.js';
-import type { Contact } from './Contact';
-import type { MinimalMessage } from './Message';
+import type { Contact } from './Contact.js';
+import type { MinimalMessage } from './Message.js';
 export type KeyPair = {
     public: Uint8Array;
     private: Uint8Array;
@@ -102,3 +102,4 @@ export type AuthenticationState = {
     keys: SignalKeyStore;
 };
 export {};
+//# sourceMappingURL=Auth.d.ts.map
