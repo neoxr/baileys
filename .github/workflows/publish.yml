@@ -25,8 +25,15 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      # ⚙️ Install Yarn versi 1.22.10
+      - name: Install Yarn 1.22.10
+        run: |
+          corepack disable
+          npm install -g yarn@1.22.10
+          yarn --version
+
       - name: Install dependencies
-        run: yarn install --immutable-cache
+        run: yarn install --frozen-lockfile
 
       # 👉 Publish to npmjs.org first, with provenance
       - name: Publish to npmjs.org with provenance
