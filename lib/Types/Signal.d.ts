@@ -18,11 +18,6 @@ type EncryptMessageOpts = {
     jid: string;
     data: Uint8Array;
 };
-type EncryptMessageWithWireOpts = {
-    encryptionJid: string;
-    wireJid: string;
-    data: Uint8Array;
-};
 type EncryptGroupMessageOpts = {
     group: string;
     data: Uint8Array;
@@ -53,11 +48,6 @@ export type SignalRepository = {
         type: 'pkmsg' | 'msg';
         ciphertext: Uint8Array;
     }>;
-    encryptMessageWithWire(opts: EncryptMessageWithWireOpts): Promise<{
-        type: 'pkmsg' | 'msg';
-        ciphertext: Uint8Array;
-        wireJid: string;
-    }>;
     encryptGroupMessage(opts: EncryptGroupMessageOpts): Promise<{
         senderKeyDistributionMessage: Uint8Array;
         ciphertext: Uint8Array;
@@ -68,7 +58,7 @@ export type SignalRepository = {
         reason?: string;
     }>;
     jidToSignalProtocolAddress(jid: string): string;
-    migrateSession(fromJids: string[], toJid: string): Promise<{
+    migrateSession(fromJid: string, toJid: string): Promise<{
         migrated: number;
         skipped: number;
         total: number;

@@ -9,6 +9,17 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     communityUpdateSubject: (jid: string, subject: string) => Promise<void>;
     communityLinkGroup: (groupJid: string, parentCommunityJid: string) => Promise<void>;
     communityUnlinkGroup: (groupJid: string, parentCommunityJid: string) => Promise<void>;
+    communityFetchLinkedGroups: (jid: string) => Promise<{
+        communityJid: string;
+        isCommunity: boolean;
+        linkedGroups: {
+            id: string | undefined;
+            subject: string;
+            creation: number | undefined;
+            owner: string | undefined;
+            size: number | undefined;
+        }[];
+    }>;
     communityRequestParticipantsList: (jid: string) => Promise<{
         [key: string]: string;
     }[]>;
@@ -70,7 +81,7 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     requestPlaceholderResend: (messageKey: WAMessageKey) => Promise<string | undefined>;
     messageRetryManager: import("../Utils/index.js").MessageRetryManager | null;
     getPrivacyTokens: (jids: string[]) => Promise<any>;
-    assertSessions: (jids: string[], force: boolean) => Promise<boolean>;
+    assertSessions: (jids: string[], force?: boolean) => Promise<boolean>;
     relayMessage: (jid: string, message: proto.IMessage, { messageId: msgId, participant, additionalAttributes, additionalNodes, useUserDevicesCache, useCachedGroupMetadata, statusJidList }: import("../Types/index.js").MessageRelayOptions) => Promise<string>;
     sendReceipt: (jid: string, participant: string | undefined, messageIds: string[], type: import("../Types/index.js").MessageReceiptType) => Promise<void>;
     sendReceipts: (keys: WAMessageKey[], type: import("../Types/index.js").MessageReceiptType) => Promise<void>;
@@ -81,15 +92,16 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
         [_: string]: string;
     }>;
     sendPeerDataOperationMessage: (pdoMessage: proto.Message.IPeerDataOperationRequestMessage) => Promise<string>;
-    createParticipantNodes: (jids: string[], message: proto.IMessage, extraAttrs?: BinaryNode["attrs"], dsmMessage?: proto.IMessage) => Promise<{
+    createParticipantNodes: (recipientJids: string[], message: proto.IMessage, extraAttrs?: BinaryNode["attrs"], dsmMessage?: proto.IMessage) => Promise<{
         nodes: BinaryNode[];
         shouldIncludeDeviceIdentity: boolean;
     }>;
     getUSyncDevices: (jids: string[], useCache: boolean, ignoreZeroDevices: boolean) => Promise<(import("../WABinary/index.js").JidWithDevice & {
-        wireJid: string;
+        jid: string;
     })[]>;
-    updateMediaMessage: (message: proto.IWebMessageInfo) => Promise<proto.IWebMessageInfo>;
-    sendMessage: (jid: string, content: import("../Types/index.js").AnyMessageContent, options?: import("../Types/index.js").MiscMessageGenerationOptions) => Promise<proto.WebMessageInfo | undefined>;
+    updateMemberLabel: (jid: string, memberLabel: string) => Promise<string>;
+    updateMediaMessage: (message: import("../Types/index.js").WAMessage) => Promise<import("../Types/index.js").WAMessage>;
+    sendMessage: (jid: string, content: import("../Types/index.js").AnyMessageContent, options?: import("../Types/index.js").MiscMessageGenerationOptions) => Promise<import("../Types/index.js").WAMessage | undefined>;
     newsletterCreate: (name: string, description?: string) => Promise<import("../Types/index.js").NewsletterMetadata>;
     newsletterUpdate: (jid: string, updates: import("../Types/index.js").NewsletterUpdate) => Promise<unknown>;
     newsletterSubscribers: (jid: string) => Promise<{
@@ -147,13 +159,22 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
         startTime: number;
     }, timeoutMs?: number) => Promise<string | undefined>;
     getBotListV2: () => Promise<import("../Types/index.js").BotListInfo[]>;
-    processingMutex: {
+    messageMutex: {
+        mutex<T>(code: () => Promise<T> | T): Promise<T>;
+    };
+    receiptMutex: {
+        mutex<T>(code: () => Promise<T> | T): Promise<T>;
+    };
+    appStatePatchMutex: {
+        mutex<T>(code: () => Promise<T> | T): Promise<T>;
+    };
+    notificationMutex: {
         mutex<T>(code: () => Promise<T> | T): Promise<T>;
     };
     upsertMessage: (msg: import("../Types/index.js").WAMessage, type: import("../Types/index.js").MessageUpsertType) => Promise<void>;
     appPatch: (patchCreate: import("../Types/index.js").WAPatchCreate) => Promise<void>;
     sendPresenceUpdate: (type: import("../Types/index.js").WAPresence, toJid?: string) => Promise<void>;
-    presenceSubscribe: (toJid: string, tcToken?: Buffer) => Promise<void>;
+    presenceSubscribe: (toJid: string) => Promise<void>;
     profilePictureUrl: (jid: string, type?: "preview" | "image", timeoutMs?: number) => Promise<string | undefined>;
     fetchBlocklist: () => Promise<(string | undefined)[]>;
     fetchStatus: (...jids: string[]) => Promise<import("../index.js").USyncQueryResultList[] | undefined>;
@@ -215,18 +236,20 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     sendRawMessage: (data: Uint8Array | Buffer) => Promise<void>;
     sendNode: (frame: BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
-    end: (error: Error | undefined) => void;
+    end: (error: Error | undefined) => Promise<void>;
     onUnexpectedError: (err: Error | import("@hapi/boom").Boom, msg: string) => void;
     uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
+    digestKeyBundle: () => Promise<void>;
+    rotateSignedPreKey: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
+    wamBuffer: import("../index.js").BinaryInfo;
     waitForConnectionUpdate: (check: (u: Partial<import("../Types/index.js").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
     executeUSyncQuery: (usyncQuery: import("../index.js").USyncQuery) => Promise<import("../index.js").USyncQueryResult | undefined>;
-    onWhatsApp: (...jids: string[]) => Promise<{
+    onWhatsApp: (...phoneNumber: string[]) => Promise<{
         jid: string;
         exists: boolean;
-        lid: string;
     }[] | undefined>;
 };
 export declare const extractCommunityMetadata: (result: BinaryNode) => GroupMetadata;

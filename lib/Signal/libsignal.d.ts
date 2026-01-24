@@ -1,8 +1,5 @@
-import type { SignalAuthState } from '../Types/index.js';
+import type { LIDMapping, SignalAuthState } from '../Types/index.js';
 import type { SignalRepositoryWithLIDStore } from '../Types/Signal.js';
-export declare function makeLibSignalRepository(auth: SignalAuthState, onWhatsAppFunc?: (...jids: string[]) => Promise<{
-    jid: string;
-    exists: boolean;
-    lid: string;
-}[] | undefined>): SignalRepositoryWithLIDStore;
+import type { ILogger } from '../Utils/logger.js';
+export declare function makeLibSignalRepository(auth: SignalAuthState, logger: ILogger, pnToLIDFunc?: (jids: string[]) => Promise<LIDMapping[] | undefined>): SignalRepositoryWithLIDStore;
 //# sourceMappingURL=libsignal.d.ts.map

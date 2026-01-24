@@ -49,6 +49,7 @@ export interface GroupMetadata {
     inviteCode?: string;
     /** the person who added you to group or changed some setting in group */
     author?: string;
+    authorPn?: string;
 }
 export interface WAGroupCreateResponse {
     status: number;
