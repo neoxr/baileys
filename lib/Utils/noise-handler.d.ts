@@ -8,12 +8,12 @@ export declare const makeNoiseHandler: ({ keyPair: { private: privateKey, public
     logger: ILogger;
     routingInfo?: Buffer | undefined;
 }) => {
-    encrypt: (plaintext: Uint8Array) => Buffer<ArrayBuffer>;
-    decrypt: (ciphertext: Uint8Array) => Buffer<ArrayBuffer>;
+    encrypt: (plaintext: Uint8Array) => Uint8Array;
+    decrypt: (ciphertext: Uint8Array) => Uint8Array;
     authenticate: (data: Uint8Array) => void;
     mixIntoKey: (data: Uint8Array) => Promise<void>;
     finishInit: () => Promise<void>;
-    processHandshake: ({ serverHello }: proto.HandshakeMessage, noiseKey: KeyPair) => Promise<Buffer<ArrayBuffer>>;
+    processHandshake: ({ serverHello }: proto.HandshakeMessage, noiseKey: KeyPair) => Promise<Uint8Array<ArrayBufferLike>>;
     encodeFrame: (data: Buffer | Uint8Array) => Buffer<ArrayBuffer>;
     decodeFrame: (newData: Buffer | Uint8Array, onFrame: (buff: Uint8Array | BinaryNode) => void) => Promise<void>;
 };

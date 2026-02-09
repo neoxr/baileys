@@ -1,4 +1,3 @@
-import type { AxiosRequestConfig } from 'axios';
 import type { Readable } from 'stream';
 import type { URL } from 'url';
 import { proto } from '../../WAProto/index.js';
@@ -9,6 +8,9 @@ import type { CacheStore } from './Socket.js';
 export { proto as WAProto };
 export type WAMessage = proto.IWebMessageInfo & {
     key: WAMessageKey;
+    messageStubParameters?: any;
+    category?: string;
+    retryCount?: number;
 };
 export type WAMessageContent = proto.IMessage;
 export type WAContactMessage = proto.Message.IContactMessage;
@@ -17,6 +19,7 @@ export type WAMessageKey = proto.IMessageKey & {
     remoteJidAlt?: string;
     participantAlt?: string;
     server_id?: string;
+    addressingMode?: string;
     isViewOnce?: boolean;
 };
 export type WATextMessage = proto.Message.IExtendedTextMessage;
@@ -195,6 +198,8 @@ export type AnyMessageContent = AnyRegularMessageContent | {
     delete: WAMessageKey;
 } | {
     disappearingMessagesInChat: boolean | number;
+} | {
+    limitSharing: boolean;
 };
 export type GroupMetadataParticipants = Pick<GroupMetadata, 'participants'>;
 type MinimalRelayOptions = {
@@ -258,7 +263,7 @@ export type MediaGenerationOptions = {
     /** cache media so it does not have to be uploaded again */
     mediaCache?: CacheStore;
     mediaUploadTimeoutMs?: number;
-    options?: AxiosRequestConfig;
+    options?: RequestInit;
     backgroundColor?: string;
     font?: number;
 };
@@ -280,7 +285,7 @@ export type MessageUpsertType = 'append' | 'notify';
 export type MessageUserReceipt = proto.IUserReceipt;
 export type WAMessageUpdate = {
     update: Partial<WAMessage>;
-    key: proto.IMessageKey;
+    key: WAMessageKey;
 };
 export type WAMessageCursor = {
     before: WAMessageKey | undefined;
@@ -288,7 +293,7 @@ export type WAMessageCursor = {
     after: WAMessageKey | undefined;
 };
 export type MessageUserReceiptUpdate = {
-    key: proto.IMessageKey;
+    key: WAMessageKey;
     receipt: MessageUserReceipt;
 };
 export type MediaDecryptionKeyInfo = {
@@ -296,5 +301,5 @@ export type MediaDecryptionKeyInfo = {
     cipherKey: Buffer;
     macKey?: Buffer;
 };
-export type MinimalMessage = Pick<proto.IWebMessageInfo, 'key' | 'messageTimestamp'>;
+export type MinimalMessage = Pick<WAMessage, 'key' | 'messageTimestamp'>;
 //# sourceMappingURL=Message.d.ts.map

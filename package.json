@@ -1,7 +1,7 @@
 {
   "name": "@neoxr/baileys",
   "type": "module",
-  "version": "8.2.19",
+  "version": "8.2.20",
   "description": "A WebSockets library for interacting with WhatsApp Web",
   "keywords": [
     "whatsapp",
@@ -29,6 +29,7 @@
     "lru-cache": "^11.1.0",
     "music-metadata": "^11.7.0",
     "pino": "^9.6",
+    "p-queue": "^9.0.0",
     "protobufjs": "^7.2.4",
     "ws": "^8.13.0"
   },

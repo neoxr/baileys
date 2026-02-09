@@ -1,8 +1,9 @@
 import { type Transform } from 'stream';
 import { proto } from '../../WAProto/index.js';
-import type { AnyMediaMessageContent, AnyMessageContent, MessageContentGenerationOptions, MessageGenerationOptions, MessageGenerationOptionsFromContent, MessageUserReceipt, WAMessage, WAMessageContent } from '../Types/index.js';
+import type { AnyMediaMessageContent, AnyMessageContent, MessageContentGenerationOptions, MessageGenerationOptions, MessageGenerationOptionsFromContent, MessageUserReceipt, WAMessage, WAMessageContent, WAMessageKey } from '../Types/index.js';
 import type { ILogger } from './logger.js';
 import { type MediaDownloadOptions } from './messages-media.js';
+type ExtractByKey<T, K extends PropertyKey> = T extends Record<K, any> ? T : never;
 /**
  * Uses a regex to test whether the string contains a URL, and returns the URL if it does.
  * @param text eg. hello https://google.com
@@ -18,9 +19,10 @@ export declare const prepareDisappearingMessageSettingContent: (ephemeralExpirat
  * @param options.forceForward will show the message as forwarded even if it is from you
  */
 export declare const generateForwardMessageContent: (message: WAMessage, forceForward?: boolean) => proto.IMessage;
+export declare const hasNonNullishProperty: <K extends PropertyKey>(message: AnyMessageContent, key: K) => message is ExtractByKey<AnyMessageContent, K>;
 export declare const generateWAMessageContent: (message: AnyMessageContent, options: MessageContentGenerationOptions) => Promise<proto.Message>;
-export declare const generateWAMessageFromContent: (jid: string, message: WAMessageContent, options: MessageGenerationOptionsFromContent) => proto.WebMessageInfo;
-export declare const generateWAMessage: (jid: string, content: AnyMessageContent, options: MessageGenerationOptions) => Promise<proto.WebMessageInfo>;
+export declare const generateWAMessageFromContent: (jid: string, message: WAMessageContent, options: MessageGenerationOptionsFromContent) => WAMessage;
+export declare const generateWAMessage: (jid: string, content: AnyMessageContent, options: MessageGenerationOptions) => Promise<WAMessage>;
 /** Get the key to access the true type of content */
 export declare const getContentType: (content: proto.IMessage | undefined) => keyof proto.IMessage | undefined;
 /**
@@ -45,6 +47,8 @@ export declare const updateMessageWithReceipt: (msg: Pick<WAMessage, "userReceip
 export declare const updateMessageWithReaction: (msg: Pick<WAMessage, "reactions">, reaction: proto.IReaction) => void;
 /** Update the message with a new poll update */
 export declare const updateMessageWithPollUpdate: (msg: Pick<WAMessage, "pollUpdates">, update: proto.IPollUpdate) => void;
+/** Update the message with a new event response */
+export declare const updateMessageWithEventResponse: (msg: Pick<WAMessage, "eventResponses">, update: proto.IEventResponse) => void;
 type VoteAggregation = {
     name: string;
     voters: string[];
@@ -56,8 +60,19 @@ type VoteAggregation = {
  * @returns A list of options & their voters
  */
 export declare function getAggregateVotesInPollMessage({ message, pollUpdates }: Pick<WAMessage, 'pollUpdates' | 'message'>, meId?: string): VoteAggregation[];
+type ResponseAggregation = {
+    response: string;
+    responders: string[];
+};
+/**
+ * Aggregates all event responses in an event message.
+ * @param msg the event creation message
+ * @param meId your jid
+ * @returns A list of response types & their responders
+ */
+export declare function getAggregateResponsesInEventMessage({ eventResponses }: Pick<WAMessage, 'eventResponses'>, meId?: string): ResponseAggregation[];
 /** Given a list of message keys, aggregates them by chat & sender. Useful for sending read receipts in bulk */
-export declare const aggregateMessageKeysNotFromMe: (keys: proto.IMessageKey[]) => {
+export declare const aggregateMessageKeysNotFromMe: (keys: WAMessageKey[]) => {
     jid: string;
     participant: string | undefined;
     messageIds: string[];
