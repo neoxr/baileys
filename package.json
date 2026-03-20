@@ -46,6 +46,7 @@
     "eslint": "^9",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.4.0",
+    "fflate": "^0.8.2",
     "jest": "^30.0.5",
     "jimp": "^1.6.0",
     "jiti": "^2.4.2",
