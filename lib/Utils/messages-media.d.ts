@@ -7,6 +7,13 @@ import { type MediaType } from '../Defaults/index.js';
 import type { DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, SocketConfig, WAMediaUpload, WAMediaUploadFunction, WAMessageContent } from '../Types/index.js';
 import { type BinaryNode } from '../WABinary/index.js';
 import type { ILogger } from './logger.js';
+export declare const getImageProcessingLibrary: () => Promise<{
+    sharp: any;
+    jimp?: undefined;
+} | {
+    jimp: typeof import("jimp");
+    sharp?: undefined;
+}>;
 export declare const hkdfInfoKey: (type: MediaType) => string;
 export declare const getRawMediaUploadData: (media: WAMediaUpload, mediaType: MediaType, logger?: ILogger) => Promise<{
     filePath: string;
@@ -68,8 +75,9 @@ type EncryptedStreamOptions = {
     saveOriginalFileIfRequired?: boolean;
     logger?: ILogger;
     opts?: AxiosRequestConfig;
+    mediaKey?: Buffer;
 };
-export declare const encryptedStream: (media: WAMediaUpload, mediaType: MediaType, { logger, saveOriginalFileIfRequired, opts }?: EncryptedStreamOptions) => Promise<{
+export declare const encryptedStream: (media: WAMediaUpload, mediaType: MediaType, { logger, saveOriginalFileIfRequired, opts, mediaKey: providedMediaKey }?: EncryptedStreamOptions) => Promise<{
     mediaKey: NonSharedBuffer;
     originalFilePath: string | undefined;
     encFilePath: string;
