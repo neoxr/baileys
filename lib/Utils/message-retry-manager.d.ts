@@ -25,6 +25,24 @@ export interface RetryStatistics {
     sessionRecreations: number;
     phoneRequests: number;
 }
+export declare enum RetryReason {
+    UnknownError = 0,
+    SignalErrorNoSession = 1,
+    SignalErrorInvalidKey = 2,
+    SignalErrorInvalidKeyId = 3,
+    /** MAC verification failed - most common cause of decryption failures */
+    SignalErrorInvalidMessage = 4,
+    SignalErrorInvalidSignature = 5,
+    SignalErrorFutureMessage = 6,
+    /** Explicit MAC failure - session is definitely out of sync */
+    SignalErrorBadMac = 7,
+    SignalErrorInvalidSession = 8,
+    SignalErrorInvalidMsgKey = 9,
+    BadBroadcastEphemeralSetting = 10,
+    UnknownCompanionNoPrekey = 11,
+    AdvFailure = 12,
+    StatusRevokeDelay = 13
+}
 export declare class MessageRetryManager {
     private logger;
     private recentMessagesMap;
@@ -45,10 +63,19 @@ export declare class MessageRetryManager {
     /**
      * Check if a session should be recreated based on retry count and history
      */
-    shouldRecreateSession(jid: string, retryCount: number, hasSession: boolean): {
+    shouldRecreateSession(jid: string, hasSession: boolean, errorCode?: RetryReason): {
         reason: string;
         recreate: boolean;
     };
+    /**
+     * Parse error code from retry receipt's retry node.
+     * Returns undefined if no error code is present.
+     */
+    parseRetryErrorCode(errorAttr: string | undefined): RetryReason | undefined;
+    /**
+     * Check if an error code indicates a MAC failure
+     */
+    isMacError(errorCode: RetryReason | undefined): boolean;
     /**
      * Increment retry counter for a message
      */

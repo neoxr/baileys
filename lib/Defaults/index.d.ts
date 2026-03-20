@@ -57,4 +57,8 @@ export declare const DEFAULT_CACHE_TTLS: {
     CALL_OFFER: number;
     USER_DEVICES: number;
 };
+/** WA Web enforces a 14-day maximum age for placeholder resend requests */
+export declare const PLACEHOLDER_MAX_AGE_SECONDS: number;
+/** Status messages older than 24 hours are considered expired */
+export declare const STATUS_EXPIRY_SECONDS: number;
 //# sourceMappingURL=index.d.ts.map
