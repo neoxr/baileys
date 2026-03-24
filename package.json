@@ -1,7 +1,7 @@
 {
   "name": "@neoxr/baileys",
   "type": "module",
-  "version": "8.3.1",
+  "version": "8.3.2",
   "description": "A WebSockets library for interacting with WhatsApp Web",
   "keywords": [
     "whatsapp",
