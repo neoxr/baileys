@@ -42,6 +42,21 @@ export declare enum WAMessageAddressingMode {
     PN = "pn",
     LID = "lid"
 }
+export type Sticker = {
+    data: WAMediaUpload;
+    emojis?: string[];
+    accessibilityLabel?: string;
+    isAnimated?: boolean;
+    isLottie?: boolean;
+};
+export type StickerPack = {
+    stickers: Sticker[];
+    cover: WAMediaUpload;
+    name: string;
+    publisher: string;
+    description?: string;
+    packId?: string;
+};
 export type MessageWithContextInfo = 'imageMessage' | 'contactMessage' | 'locationMessage' | 'extendedTextMessage' | 'documentMessage' | 'audioMessage' | 'videoMessage' | 'call' | 'contactsArrayMessage' | 'liveLocationMessage' | 'templateMessage' | 'stickerMessage' | 'groupInviteMessage' | 'templateButtonReplyMessage' | 'productMessage' | 'listMessage' | 'orderMessage' | 'listResponseMessage' | 'buttonsMessage' | 'buttonsResponseMessage' | 'interactiveMessage' | 'interactiveResponseMessage' | 'pollCreationMessage' | 'requestPhoneNumberMessage' | 'messageHistoryBundle' | 'eventMessage' | 'newsletterAdminInviteMessage' | 'albumMessage' | 'stickerPackMessage' | 'pollResultSnapshotMessage' | 'messageHistoryNotice';
 export type DownloadableMessage = {
     mediaKey?: Uint8Array | null;
@@ -158,6 +173,8 @@ export type AnyRegularMessageContent = (({
     text: string;
     linkPreview?: WAUrlInfo | null;
 } & Mentionable & Contextable & Editable) | AnyMediaMessageContent | {
+    stickerPack: StickerPack;
+} | {
     event: EventMessageOptions;
 } | ({
     poll: PollMessageOptions;
