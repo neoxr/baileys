@@ -1,4 +1,3 @@
-import type { AxiosRequestConfig } from 'axios';
 import type { Readable } from 'stream';
 import type { URL } from 'url';
 import { proto } from '../../WAProto/index.js';
@@ -20,6 +19,7 @@ export type WAMessageKey = proto.IMessageKey & {
     remoteJidAlt?: string;
     participantAlt?: string;
     server_id?: string;
+    addressingMode?: string;
     isViewOnce?: boolean;
 };
 export type WATextMessage = proto.Message.IExtendedTextMessage;
@@ -42,21 +42,6 @@ export declare enum WAMessageAddressingMode {
     PN = "pn",
     LID = "lid"
 }
-export type Sticker = {
-    data: WAMediaUpload;
-    emojis?: string[];
-    accessibilityLabel?: string;
-    isAnimated?: boolean;
-    isLottie?: boolean;
-};
-export type StickerPack = {
-    stickers: Sticker[];
-    cover: WAMediaUpload;
-    name: string;
-    publisher: string;
-    description?: string;
-    packId?: string;
-};
 export type MessageWithContextInfo = 'imageMessage' | 'contactMessage' | 'locationMessage' | 'extendedTextMessage' | 'documentMessage' | 'audioMessage' | 'videoMessage' | 'call' | 'contactsArrayMessage' | 'liveLocationMessage' | 'templateMessage' | 'stickerMessage' | 'groupInviteMessage' | 'templateButtonReplyMessage' | 'productMessage' | 'listMessage' | 'orderMessage' | 'listResponseMessage' | 'buttonsMessage' | 'buttonsResponseMessage' | 'interactiveMessage' | 'interactiveResponseMessage' | 'pollCreationMessage' | 'requestPhoneNumberMessage' | 'messageHistoryBundle' | 'eventMessage' | 'newsletterAdminInviteMessage' | 'albumMessage' | 'stickerPackMessage' | 'pollResultSnapshotMessage' | 'messageHistoryNotice';
 export type DownloadableMessage = {
     mediaKey?: Uint8Array | null;
@@ -85,7 +70,6 @@ export interface WAUrlInfo {
 type Mentionable = {
     /** list of jids that are mentioned in the accompanying text */
     mentions?: string[];
-    mentionAll?: boolean;
 };
 type Contextable = {
     /** add contextInfo to the message */
@@ -174,8 +158,6 @@ export type AnyRegularMessageContent = (({
     text: string;
     linkPreview?: WAUrlInfo | null;
 } & Mentionable & Contextable & Editable) | AnyMediaMessageContent | {
-    stickerPack: StickerPack;
-} | {
     event: EventMessageOptions;
 } | ({
     poll: PollMessageOptions;
@@ -216,6 +198,8 @@ export type AnyMessageContent = AnyRegularMessageContent | {
     delete: WAMessageKey;
 } | {
     disappearingMessagesInChat: boolean | number;
+} | {
+    limitSharing: boolean;
 };
 export type GroupMetadataParticipants = Pick<GroupMetadata, 'participants'>;
 type MinimalRelayOptions = {
@@ -279,7 +263,7 @@ export type MediaGenerationOptions = {
     /** cache media so it does not have to be uploaded again */
     mediaCache?: CacheStore;
     mediaUploadTimeoutMs?: number;
-    options?: AxiosRequestConfig;
+    options?: RequestInit;
     backgroundColor?: string;
     font?: number;
 };
@@ -301,7 +285,7 @@ export type MessageUpsertType = 'append' | 'notify';
 export type MessageUserReceipt = proto.IUserReceipt;
 export type WAMessageUpdate = {
     update: Partial<WAMessage>;
-    key: proto.IMessageKey;
+    key: WAMessageKey;
 };
 export type WAMessageCursor = {
     before: WAMessageKey | undefined;
@@ -309,13 +293,13 @@ export type WAMessageCursor = {
     after: WAMessageKey | undefined;
 };
 export type MessageUserReceiptUpdate = {
-    key: proto.IMessageKey;
+    key: WAMessageKey;
     receipt: MessageUserReceipt;
 };
 export type MediaDecryptionKeyInfo = {
-    iv: Buffer;
-    cipherKey: Buffer;
-    macKey?: Buffer;
+    iv: Uint8Array;
+    cipherKey: Uint8Array;
+    macKey?: Uint8Array;
 };
-export type MinimalMessage = Pick<proto.IWebMessageInfo, 'key' | 'messageTimestamp'>;
+export type MinimalMessage = Pick<WAMessage, 'key' | 'messageTimestamp'>;
 //# sourceMappingURL=Message.d.ts.map

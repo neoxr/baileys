@@ -1,11 +1,10 @@
-import type { AxiosRequestConfig } from 'axios';
 import type { Agent } from 'https';
 import type { URL } from 'url';
 import { proto } from '../../WAProto/index.js';
 import type { ILogger } from '../Utils/logger.js';
-import type { AuthenticationState, SignalAuthState, TransactionCapabilityOptions } from './Auth.js';
+import type { AuthenticationState, LIDMapping, SignalAuthState, TransactionCapabilityOptions } from './Auth.js';
 import type { GroupMetadata } from './GroupMetadata.js';
-import { type MediaConnInfo } from './Message.js';
+import { type MediaConnInfo, type WAMessageKey } from './Message.js';
 import type { SignalRepositoryWithLIDStore } from './Signal.js';
 export type WAVersion = [number, number, number];
 export type WABrowserDescription = [string, string, string];
@@ -119,20 +118,16 @@ export type SocketConfig = {
         patch: boolean;
         snapshot: boolean;
     };
-    /** options for axios */
-    options: AxiosRequestConfig<{}>;
+    /** options for HTTP fetch requests */
+    options: RequestInit;
     /**
      * fetch a message from your store
      * implement this so that messages failed to send
      * (solves the "this message can take a while" issue) can be retried
      * */
-    getMessage: (key: proto.IMessageKey) => Promise<proto.IMessage | undefined>;
+    getMessage: (key: WAMessageKey) => Promise<proto.IMessage | undefined>;
     /** cached group metadata, use to prevent redundant requests to WA & speed up msg sending */
     cachedGroupMetadata: (jid: string) => Promise<GroupMetadata | undefined>;
-    makeSignalRepository: (auth: SignalAuthState, onWhatsAppFunc?: (...jids: string[]) => Promise<{
-        jid: string;
-        exists: boolean;
-        lid: string;
-    }[] | undefined>) => SignalRepositoryWithLIDStore;
+    makeSignalRepository: (auth: SignalAuthState, logger: ILogger, pnToLIDFunc?: (jids: string[]) => Promise<LIDMapping[] | undefined>) => SignalRepositoryWithLIDStore;
 };
 //# sourceMappingURL=Socket.d.ts.map

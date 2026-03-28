@@ -1,13 +1,8 @@
-declare class LTHash {
-    salt: string;
-    constructor(e: string);
-    add(e: ArrayBuffer, t: ArrayBuffer[]): Promise<ArrayBuffer>;
-    subtract(e: ArrayBuffer, t: ArrayBuffer[]): Promise<ArrayBuffer>;
-    subtractThenAdd(e: ArrayBuffer, addList: ArrayBuffer[], subtractList: ArrayBuffer[]): Promise<ArrayBuffer>;
-    private _addSingle;
-    private _subtractSingle;
-    private performPointwiseWithOverflow;
-}
-export declare const LT_HASH_ANTI_TAMPERING: LTHash;
-export {};
+import { LTHashAntiTampering } from 'whatsapp-rust-bridge';
+/**
+ * LT Hash is a summation based hash algorithm that maintains the integrity of a piece of data
+ * over a series of mutations. You can add/remove mutations and it'll return a hash equal to
+ * if the same series of mutations was made sequentially.
+ */
+export declare const LT_HASH_ANTI_TAMPERING: LTHashAntiTampering;
 //# sourceMappingURL=lt-hash.d.ts.map

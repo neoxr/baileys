@@ -1,6 +1,7 @@
 import { Boom } from '@hapi/boom';
 import type { SocketConfig } from '../Types/index.js';
 import { type BinaryNode } from '../WABinary/index.js';
+import { BinaryInfo } from '../WAM/BinaryInfo.js';
 import { USyncQuery } from '../WAUSync/index.js';
 import { WebSocketClient } from './Client/index.js';
 /**
@@ -25,6 +26,16 @@ export declare const makeSocket: (config: SocketConfig) => {
     };
     signalRepository: import("../Types/index.js").SignalRepositoryWithLIDStore;
     readonly user: import("../Types/index.js").Contact | undefined;
+    /**
+     * CONNECTION STABILITY: Expose connection health metrics so
+     * consumers can implement their own health checks or monitoring.
+     * - lastMessageReceived: timestamp of last data from server
+     * - consecutivePingFailures: how many pings have failed in a row
+     */
+    readonly connectionHealth: {
+        lastMessageReceived: Date;
+        consecutivePingFailures: number;
+    };
     generateMessageTag: () => string;
     query: (node: BinaryNode, timeoutMs?: number) => Promise<any>;
     waitForMessage: <T>(msgId: string, timeoutMs?: number | undefined) => Promise<T | undefined>;
@@ -32,19 +43,23 @@ export declare const makeSocket: (config: SocketConfig) => {
     sendRawMessage: (data: Uint8Array | Buffer) => Promise<void>;
     sendNode: (frame: BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
-    end: (error: Error | undefined) => void;
+    end: (error: Error | undefined) => Promise<void>;
     onUnexpectedError: (err: Error | Boom, msg: string) => void;
     uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
+    digestKeyBundle: () => Promise<void>;
+    rotateSignedPreKey: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
+    updateServerTimeOffset: ({ attrs }: BinaryNode) => void;
+    sendUnifiedSession: () => Promise<void>;
+    wamBuffer: BinaryInfo;
     /** Waits for the connection to WA to reach a state */
     waitForConnectionUpdate: (check: (u: Partial<import("../Types/index.js").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
     executeUSyncQuery: (usyncQuery: USyncQuery) => Promise<import("../index.js").USyncQueryResult | undefined>;
-    onWhatsApp: (...jids: string[]) => Promise<{
+    onWhatsApp: (...phoneNumber: string[]) => Promise<{
         jid: string;
         exists: boolean;
-        lid: string;
     }[] | undefined>;
 };
 //# sourceMappingURL=socket.d.ts.map

@@ -19,6 +19,10 @@ export type SignalIdentity = {
     identifier: ProtocolAddress;
     identifierKey: Uint8Array;
 };
+export type LIDMapping = {
+    pn: string;
+    lid: string;
+};
 export type LTHashState = {
     version: number;
     hash: Buffer;
@@ -59,6 +63,7 @@ export type AuthenticationCreds = SignalCreds & {
     pairingCode: string | undefined;
     lastPropHash: string | undefined;
     routingInfo: Buffer | undefined;
+    additionalData?: any | undefined;
 };
 export type SignalDataTypeMap = {
     'pre-key': KeyPair;

@@ -1,10 +1,10 @@
 import type { Boom } from '@hapi/boom';
 import { proto } from '../../WAProto/index.js';
-import type { AuthenticationCreds } from './Auth.js';
+import type { AuthenticationCreds, LIDMapping } from './Auth.js';
 import type { WACallEvent } from './Call.js';
 import type { Chat, ChatUpdate, PresenceData } from './Chat.js';
 import type { Contact } from './Contact.js';
-import type { GroupMetadata, ParticipantAction, RequestJoinAction, RequestJoinMethod } from './GroupMetadata.js';
+import type { GroupMetadata, GroupParticipant, ParticipantAction, RequestJoinAction, RequestJoinMethod } from './GroupMetadata.js';
 import type { Label } from './Label.js';
 import type { LabelAssociation } from './LabelAssociation.js';
 import type { MessageUpsertType, MessageUserReceiptUpdate, WAMessage, WAMessageKey, WAMessageUpdate } from './Message.js';
@@ -19,19 +19,17 @@ export type BaileysEventMap = {
         chats: Chat[];
         contacts: Contact[];
         messages: WAMessage[];
+        lidPnMappings?: LIDMapping[];
         isLatest?: boolean;
         progress?: number | null;
-        syncType?: proto.HistorySync.HistorySyncType;
+        syncType?: proto.HistorySync.HistorySyncType | null;
         peerDataRequestSessionId?: string | null;
     };
     /** upsert chats */
     'chats.upsert': Chat[];
     /** update the given chats */
     'chats.update': ChatUpdate[];
-    'lid-mapping.update': {
-        lid: string;
-        pn: string;
-    };
+    'lid-mapping.update': LIDMapping;
     /** delete chats with given ID */
     'chats.delete': string[];
     /** presence of contact in a chat updated */
@@ -80,15 +78,25 @@ export type BaileysEventMap = {
     'group-participants.update': {
         id: string;
         author: string;
-        participants: string[];
+        authorPn?: string;
+        participants: GroupParticipant[];
         action: ParticipantAction;
     };
     'group.join-request': {
         id: string;
         author: string;
+        authorPn?: string;
         participant: string;
+        participantPn?: string;
         action: RequestJoinAction;
         method: RequestJoinMethod;
+    };
+    'group.member-tag.update': {
+        groupId: string;
+        participant: string;
+        participantAlt?: string;
+        label: string;
+        messageTimestamp?: number;
     };
     'blocklist.set': {
         blocklist: string[];
@@ -129,6 +137,36 @@ export type BaileysEventMap = {
     'newsletter-settings.update': {
         id: string;
         update: any;
+    };
+    /** Settings and actions sync events */
+    'chats.lock': {
+        id: string;
+        locked: boolean;
+    };
+    'settings.update': {
+        setting: 'unarchiveChats';
+        value: boolean;
+    } | {
+        setting: 'locale';
+        value: string;
+    } | {
+        setting: 'disableLinkPreviews';
+        value: proto.SyncActionValue.IPrivacySettingDisableLinkPreviewsAction;
+    } | {
+        setting: 'timeFormat';
+        value: proto.SyncActionValue.ITimeFormatAction;
+    } | {
+        setting: 'privacySettingRelayAllCalls';
+        value: proto.SyncActionValue.IPrivacySettingRelayAllCalls;
+    } | {
+        setting: 'statusPrivacy';
+        value: proto.SyncActionValue.IStatusPrivacyAction;
+    } | {
+        setting: 'notificationActivitySetting';
+        value: proto.SyncActionValue.NotificationActivitySettingAction.NotificationActivitySetting;
+    } | {
+        setting: 'channelsPersonalisedRecommendation';
+        value: proto.SyncActionValue.IPrivacySettingChannelsPersonalisedRecommendationAction;
     };
 };
 export type BufferedEventData = {
@@ -193,7 +231,7 @@ export type BaileysEvent = keyof BaileysEventMap;
 export interface BaileysEventEmitter {
     on<T extends keyof BaileysEventMap>(event: T, listener: (arg: BaileysEventMap[T]) => void): void;
     off<T extends keyof BaileysEventMap>(event: T, listener: (arg: BaileysEventMap[T]) => void): void;
-    removeAllListeners<T extends keyof BaileysEventMap>(event: T): void;
+    removeAllListeners<T extends keyof BaileysEventMap>(event?: T): void;
     emit<T extends keyof BaileysEventMap>(event: T, arg: BaileysEventMap[T]): boolean;
 }
 //# sourceMappingURL=Events.d.ts.map

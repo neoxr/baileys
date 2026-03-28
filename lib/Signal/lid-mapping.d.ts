@@ -1,27 +1,19 @@
-import type { SignalKeyStoreWithTransaction } from '../Types/index.js';
+import type { LIDMapping, SignalKeyStoreWithTransaction } from '../Types/index.js';
+import type { ILogger } from '../Utils/logger.js';
 export declare class LIDMappingStore {
     private readonly mappingCache;
     private readonly keys;
-    private onWhatsAppFunc?;
-    constructor(keys: SignalKeyStoreWithTransaction, onWhatsAppFunc?: (...jids: string[]) => Promise<{
-        jid: string;
-        exists: boolean;
-        lid: string;
-    }[] | undefined>);
-    /**
-     * Store LID-PN mapping - USER LEVEL
-     */
-    storeLIDPNMappings(pairs: {
-        lid: string;
-        pn: string;
-    }[]): Promise<void>;
-    /**
-     * Get LID for PN - Returns device-specific LID based on user mapping
-     */
+    private readonly logger;
+    private pnToLIDFunc?;
+    private readonly inflightLIDLookups;
+    private readonly inflightPNLookups;
+    constructor(keys: SignalKeyStoreWithTransaction, logger: ILogger, pnToLIDFunc?: (jids: string[]) => Promise<LIDMapping[] | undefined>);
+    storeLIDPNMappings(pairs: LIDMapping[]): Promise<void>;
     getLIDForPN(pn: string): Promise<string | null>;
-    /**
-     * Get PN for LID - USER LEVEL with device construction
-     */
+    getLIDsForPNs(pns: string[]): Promise<LIDMapping[] | null>;
+    private _getLIDsForPNsImpl;
     getPNForLID(lid: string): Promise<string | null>;
+    getPNsForLIDs(lids: string[]): Promise<LIDMapping[] | null>;
+    private _getPNsForLIDsImpl;
 }
 //# sourceMappingURL=lid-mapping.d.ts.map
