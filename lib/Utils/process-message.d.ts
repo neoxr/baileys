@@ -41,6 +41,13 @@ type EventContext = {
     /** jid of the person that responded */
     responderJid: string;
 };
+export declare function decryptPollVoteWithLidFallback(encryptedVote: proto.Message.IPollEncValue, opts: {
+    pollEncKey: Uint8Array;
+    pollCreationMsgKey: WAMessageKey;
+    voteMsgKey: WAMessageKey;
+    meId: string;
+    meLid?: string;
+}): proto.Message.PollVoteMessage | undefined;
 /**
  * Decrypt a poll vote
  * @param vote encrypted vote
