@@ -54,6 +54,11 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     groupFetchAllParticipating: () => Promise<{
         [_: string]: import("../index.js").GroupMetadata;
     }>;
+    serverProps: {
+        privacyTokenOn1to1: boolean;
+        profilePicPrivacyToken: boolean;
+        lidTrustedTokenIssueToLid: boolean;
+    };
     createCallLink: (type: "audio" | "video", event?: {
         startTime: number;
     }, timeoutMs?: number) => Promise<string | undefined>;

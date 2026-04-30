@@ -25,5 +25,6 @@ export declare class USyncQuery {
     withDisappearingModeProtocol(): this;
     withBotProfileProtocol(): this;
     withLIDProtocol(): this;
+    withUsernameProtocol(): this;
 }
 //# sourceMappingURL=USyncQuery.d.ts.map

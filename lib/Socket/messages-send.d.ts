@@ -6,6 +6,7 @@ import { type BinaryNode, type JidWithDevice } from '../WABinary/index.js';
 import { USyncQuery } from '../WAUSync/index.js';
 export declare const makeMessagesSocket: (config: SocketConfig) => {
     getPrivacyTokens: (jids: string[]) => Promise<any>;
+    issuePrivacyTokens: (jids: string[], timestamp?: number) => Promise<any>;
     assertSessions: (jids: string[], force?: boolean) => Promise<boolean>;
     relayMessage: (jid: string, message: proto.IMessage, { messageId: msgId, participant, additionalAttributes, additionalNodes, useUserDevicesCache, useCachedGroupMetadata, statusJidList }: MessageRelayOptions) => Promise<string>;
     sendReceipt: (jid: string, participant: string | undefined, messageIds: string[], type: MessageReceiptType) => Promise<void>;
@@ -81,6 +82,11 @@ export declare const makeMessagesSocket: (config: SocketConfig) => {
     groupFetchAllParticipating: () => Promise<{
         [_: string]: import("../Types/index.js").GroupMetadata;
     }>;
+    serverProps: {
+        privacyTokenOn1to1: boolean;
+        profilePicPrivacyToken: boolean;
+        lidTrustedTokenIssueToLid: boolean;
+    };
     createCallLink: (type: "audio" | "video", event?: {
         startTime: number;
     }, timeoutMs?: number) => Promise<string | undefined>;

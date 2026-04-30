@@ -4,13 +4,14 @@ import { proto } from '../../WAProto/index.js';
 import type { MessageReceiptType, MessageRelayOptions, SocketConfig, WAMessage, WAMessageKey } from '../Types/index.js';
 import { type BinaryNode } from '../WABinary/index.js';
 export declare const makeMessagesRecvSocket: (config: SocketConfig) => {
-    sendMessageAck: ({ tag, attrs, content }: BinaryNode, errorCode?: number) => Promise<void>;
+    sendMessageAck: (node: BinaryNode, errorCode?: number) => Promise<void>;
     sendRetryRequest: (node: BinaryNode, forceIncludeKeys?: boolean) => Promise<void>;
     rejectCall: (callId: string, callFrom: string) => Promise<void>;
     fetchMessageHistory: (count: number, oldestMsgKey: WAMessageKey, oldestMsgTimestamp: number | Long) => Promise<string>;
     requestPlaceholderResend: (messageKey: WAMessageKey, msgData?: Partial<WAMessage>) => Promise<string | undefined>;
     messageRetryManager: import("../Utils/index.js").MessageRetryManager | null;
     getPrivacyTokens: (jids: string[]) => Promise<any>;
+    issuePrivacyTokens: (jids: string[], timestamp?: number) => Promise<any>;
     assertSessions: (jids: string[], force?: boolean) => Promise<boolean>;
     relayMessage: (jid: string, message: proto.IMessage, { messageId: msgId, participant, additionalAttributes, additionalNodes, useUserDevicesCache, useCachedGroupMetadata, statusJidList }: MessageRelayOptions) => Promise<string>;
     sendReceipt: (jid: string, participant: string | undefined, messageIds: string[], type: MessageReceiptType) => Promise<void>;
@@ -85,6 +86,11 @@ export declare const makeMessagesRecvSocket: (config: SocketConfig) => {
     groupFetchAllParticipating: () => Promise<{
         [_: string]: import("../Types/index.js").GroupMetadata;
     }>;
+    serverProps: {
+        privacyTokenOn1to1: boolean;
+        profilePicPrivacyToken: boolean;
+        lidTrustedTokenIssueToLid: boolean;
+    };
     createCallLink: (type: "audio" | "video", event?: {
         startTime: number;
     }, timeoutMs?: number) => Promise<string | undefined>;

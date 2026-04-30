@@ -43,6 +43,11 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
     groupFetchAllParticipating: () => Promise<{
         [_: string]: GroupMetadata;
     }>;
+    serverProps: {
+        privacyTokenOn1to1: boolean;
+        profilePicPrivacyToken: boolean;
+        lidTrustedTokenIssueToLid: boolean;
+    };
     createCallLink: (type: "audio" | "video", event?: {
         startTime: number;
     }, timeoutMs?: number) => Promise<string | undefined>;

@@ -25,6 +25,12 @@ export declare const NACK_REASONS: {
     UnsupportedLIDGroup: number;
     DBOperationFailed: number;
 };
+export declare const SERVER_ERROR_CODES: {
+    /** 1:1 message missing privacy token (tctoken) */
+    readonly MissingTcToken: "463";
+    /** Stanza validation failure (SMAX_INVALID) — likely stale device session */
+    readonly SmaxInvalid: "479";
+};
 export declare const extractAddressingContext: (stanza: BinaryNode) => {
     addressingMode: string;
     senderAlt: string | undefined;

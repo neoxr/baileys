@@ -1,7 +1,7 @@
 {
   "name": "@neoxr/baileys",
   "type": "module",
-  "version": "8.3.5",
+  "version": "8.3.6",
   "description": "A WebSockets library for interacting with WhatsApp Web",
   "keywords": [
     "whatsapp",
@@ -27,11 +27,11 @@
     "fflate": "^0.8.2",
     "libsignal": "git+https://github.com/whiskeysockets/libsignal-node",
     "lru-cache": "^11.1.0",
-    "music-metadata": "^11.7.0",
+    "music-metadata": "11.12.1",
     "p-queue": "^9.0.0",
     "pino": "^9.6",
     "protobufjs": "^7.2.4",
-    "whatsapp-rust-bridge": "0.5.2",
+    "whatsapp-rust-bridge": "0.5.3",
     "ws": "^8.13.0"
   },
   "devDependencies": {

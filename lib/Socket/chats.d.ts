@@ -6,6 +6,14 @@ import type { LabelActionBody } from '../Types/Label.js';
 import { type BinaryNode } from '../WABinary/index.js';
 import { USyncQuery } from '../WAUSync/index.js';
 export declare const makeChatsSocket: (config: SocketConfig) => {
+    serverProps: {
+        /** AB prop 10518: gate tctoken on 1:1 messages. Default true (safe: avoids 463). */
+        privacyTokenOn1to1: boolean;
+        /** AB prop 9666: gate tctoken on profile picture IQs. WA Web default: true. */
+        profilePicPrivacyToken: boolean;
+        /** AB prop 14303: issue tctokens to LID instead of PN. WA Web default: false. */
+        lidTrustedTokenIssueToLid: boolean;
+    };
     createCallLink: (type: "audio" | "video", event?: {
         startTime: number;
     }, timeoutMs?: number) => Promise<string | undefined>;
