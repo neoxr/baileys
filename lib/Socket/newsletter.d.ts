@@ -110,6 +110,7 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
     addOrEditContact: (jid: string, contact: import("../index.js").proto.SyncActionValue.IContactAction) => Promise<void>;
     removeContact: (jid: string) => Promise<void>;
+    placeholderResendCache: import("../index.js").CacheStore;
     addLabel: (jid: string, labels: import("../Types/Label.js").LabelActionBody) => Promise<void>;
     addChatLabel: (jid: string, labelId: string) => Promise<void>;
     removeChatLabel: (jid: string, labelId: string) => Promise<void>;
@@ -129,6 +130,7 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
         createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): (...args: A) => Promise<T>;
         flush(): boolean;
         isBuffering(): boolean;
+        destroy(): void;
     };
     authState: {
         creds: import("../index.js").AuthenticationCreds;
@@ -136,10 +138,6 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     };
     signalRepository: import("../index.js").SignalRepositoryWithLIDStore;
     user: import("../index.js").Contact | undefined;
-    connectionHealth: {
-        lastMessageReceived: Date;
-        consecutivePingFailures: number;
-    };
     generateMessageTag: () => string;
     query: (node: import("../index.js").BinaryNode, timeoutMs?: number) => Promise<any>;
     waitForMessage: <T>(msgId: string, timeoutMs?: number | undefined) => Promise<T | undefined>;
@@ -148,8 +146,9 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     sendNode: (frame: import("../index.js").BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
     end: (error: Error | undefined) => Promise<void>;
+    registerSocketEndHandler: (handler: (error: Error | undefined) => void | Promise<void>) => void;
     onUnexpectedError: (err: Error | import("@hapi/boom").Boom, msg: string) => void;
-    uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
+    uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     digestKeyBundle: () => Promise<void>;
     rotateSignedPreKey: () => Promise<void>;
@@ -164,6 +163,8 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
         jid: string;
         exists: boolean;
     }[] | undefined>;
+    fetchAccountReachoutTimelock: () => Promise<import("../index.js").ReachoutTimelockState>;
+    fetchNewChatMessageCap: () => Promise<import("../index.js").NewChatMessageCapInfo>;
 };
 export type NewsletterSocket = ReturnType<typeof makeNewsletterSocket>;
 //# sourceMappingURL=newsletter.d.ts.map

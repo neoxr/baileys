@@ -7,6 +7,7 @@ export declare const processHistoryMessage: (item: proto.IHistorySync, logger?: 
     contacts: Contact[];
     messages: WAMessage[];
     lidPnMappings: LIDMapping[];
+    pastParticipants: proto.IPastParticipants[] | null | undefined;
     syncType: proto.HistorySync.HistorySyncType | null | undefined;
     progress: number | null | undefined;
 };
@@ -15,6 +16,7 @@ export declare const downloadAndProcessHistorySyncNotification: (msg: proto.Mess
     contacts: Contact[];
     messages: WAMessage[];
     lidPnMappings: LIDMapping[];
+    pastParticipants: proto.IPastParticipants[] | null | undefined;
     syncType: proto.HistorySync.HistorySyncType | null | undefined;
     progress: number | null | undefined;
 }>;

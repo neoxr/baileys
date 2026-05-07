@@ -88,12 +88,15 @@ export declare const encryptedStream: (media: WAMediaUpload, mediaType: MediaTyp
     fileSha256: NonSharedBuffer;
     fileLength: number;
 }>;
+export declare const DEF_MEDIA_HOST = "mmg.whatsapp.net";
 export type MediaDownloadOptions = {
     startByte?: number;
     endByte?: number;
     options?: RequestInit;
+    /** Optional media host override; falls back to DEF_MEDIA_HOST when not provided. */
+    host?: string;
 };
-export declare const getUrlFromDirectPath: (directPath: string) => string;
+export declare const getUrlFromDirectPath: (directPath: string, host?: string) => string;
 export declare const downloadContentFromMessage: ({ mediaKey, directPath, url }: DownloadableMessage, type: MediaType, opts?: MediaDownloadOptions) => Promise<Transform>;
 /**
  * Decrypts and downloads an AES256-CBC encrypted file given the keys.

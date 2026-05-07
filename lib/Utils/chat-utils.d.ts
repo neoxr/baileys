@@ -6,6 +6,22 @@ type FetchAppStateSyncKey = (keyId: string) => Promise<proto.Message.IAppStateSy
 export type ChatMutationMap = {
     [index: string]: ChatMutation;
 };
+type Mac = {
+    indexMac: Uint8Array;
+    valueMac: Uint8Array;
+    operation: proto.SyncdMutation.SyncdOperation;
+};
+export declare const makeLtHashGenerator: ({ indexValueMap, hash }: Pick<LTHashState, "hash" | "indexValueMap">) => {
+    mix: ({ indexMac, valueMac, operation }: Mac) => void;
+    finish: () => {
+        hash: Buffer<ArrayBuffer>;
+        indexValueMap: {
+            [indexMacBase64: string]: {
+                valueMac: Uint8Array | Buffer;
+            };
+        };
+    };
+};
 export declare const newLTHashState: () => LTHashState;
 export declare const ensureLTHashStateVersion: (state: LTHashState) => LTHashState;
 export declare const MAX_SYNC_ATTEMPTS = 2;
@@ -70,7 +86,7 @@ export declare const extractSyncdPatches: (result: BinaryNode, options: RequestI
 }>;
 export declare const downloadExternalBlob: (blob: proto.IExternalBlobReference, options: RequestInit) => Promise<Buffer<ArrayBuffer>>;
 export declare const downloadExternalPatch: (blob: proto.IExternalBlobReference, options: RequestInit) => Promise<proto.SyncdMutations>;
-export declare const decodeSyncdSnapshot: (name: WAPatchName, snapshot: proto.ISyncdSnapshot, getAppStateSyncKey: FetchAppStateSyncKey, minimumVersionNumber: number | undefined, validateMacs?: boolean) => Promise<{
+export declare const decodeSyncdSnapshot: (name: WAPatchName, snapshot: proto.ISyncdSnapshot, getAppStateSyncKey: FetchAppStateSyncKey, minimumVersionNumber: number | undefined, validateMacs?: boolean, logger?: ILogger) => Promise<{
     state: LTHashState;
     mutationMap: ChatMutationMap;
 }>;

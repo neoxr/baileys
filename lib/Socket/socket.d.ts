@@ -1,5 +1,5 @@
 import { Boom } from '@hapi/boom';
-import type { SocketConfig } from '../Types/index.js';
+import { type NewChatMessageCapInfo, type ReachoutTimelockState, type SocketConfig } from '../Types/index.js';
 import { type BinaryNode } from '../WABinary/index.js';
 import { BinaryInfo } from '../WAM/BinaryInfo.js';
 import { USyncQuery } from '../WAUSync/index.js';
@@ -19,6 +19,7 @@ export declare const makeSocket: (config: SocketConfig) => {
         createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): (...args: A) => Promise<T>;
         flush(): boolean;
         isBuffering(): boolean;
+        destroy(): void;
     };
     authState: {
         creds: import("../Types/index.js").AuthenticationCreds;
@@ -26,16 +27,6 @@ export declare const makeSocket: (config: SocketConfig) => {
     };
     signalRepository: import("../Types/index.js").SignalRepositoryWithLIDStore;
     readonly user: import("../Types/index.js").Contact | undefined;
-    /**
-     * CONNECTION STABILITY: Expose connection health metrics so
-     * consumers can implement their own health checks or monitoring.
-     * - lastMessageReceived: timestamp of last data from server
-     * - consecutivePingFailures: how many pings have failed in a row
-     */
-    readonly connectionHealth: {
-        lastMessageReceived: Date;
-        consecutivePingFailures: number;
-    };
     generateMessageTag: () => string;
     query: (node: BinaryNode, timeoutMs?: number) => Promise<any>;
     waitForMessage: <T>(msgId: string, timeoutMs?: number | undefined) => Promise<T | undefined>;
@@ -44,8 +35,9 @@ export declare const makeSocket: (config: SocketConfig) => {
     sendNode: (frame: BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
     end: (error: Error | undefined) => Promise<void>;
+    registerSocketEndHandler: (handler: (error: Error | undefined) => void | Promise<void>) => void;
     onUnexpectedError: (err: Error | Boom, msg: string) => void;
-    uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
+    uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     digestKeyBundle: () => Promise<void>;
     rotateSignedPreKey: () => Promise<void>;
@@ -61,5 +53,7 @@ export declare const makeSocket: (config: SocketConfig) => {
         jid: string;
         exists: boolean;
     }[] | undefined>;
+    fetchAccountReachoutTimelock: () => Promise<ReachoutTimelockState>;
+    fetchNewChatMessageCap: () => Promise<NewChatMessageCapInfo>;
 };
 //# sourceMappingURL=socket.d.ts.map
