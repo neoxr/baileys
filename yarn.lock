@@ -7270,10 +7270,10 @@ webidl-conversions@^3.0.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
   integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
 
-whatsapp-rust-bridge@0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/whatsapp-rust-bridge/-/whatsapp-rust-bridge-0.5.3.tgz#3981f247106fe0e03a674ba541d11f32b19608d7"
-  integrity sha512-Xb3GAgtWQQJ30oI4a4pjM4+YUeli9CMLTwTIewUrb+AJMFElIkiT5uo+j1Zhc+amiV0Jj+LfX76c/EEZirJbGA==
+whatsapp-rust-bridge@0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/whatsapp-rust-bridge/-/whatsapp-rust-bridge-0.5.4.tgz#98a3313b4c231967cb411336e752d71cee4ed4a0"
+  integrity sha512-yYO1qSs0Fe7tGtnxOFHomocUD6IZtoAgmA4oDFyGIRZ67D3QZk3w7swA6XXFXNQngiyrg2k7tul6IrM3eUFh7A==
 
 whatwg-url@^5.0.0:
   version "5.0.0"
