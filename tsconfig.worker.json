@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "declaration": false
+  },
+  "include": ["src/worker-bootstrap.mts"],
+  "exclude": ["node_modules"]
+}
