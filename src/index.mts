@@ -259,11 +259,9 @@ export class VoipClient {
       this.#activeCall = null;
       this.#relay?.closeAll();
       this.#engine?.destroy();
-      this.#config.sock?.end?.();
       this.#engine = null;
       this.#relay = null;
       this.#signaling = null;
-      this.#config.sock = null;
    };
 
    // ─── private ──────────────────────────────────────────────────────────────
