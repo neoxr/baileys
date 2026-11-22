@@ -51,6 +51,8 @@ export type SocketConfig = {
     version: WAVersion;
     /** override browser config */
     browser: WABrowserDescription;
+    /** override platform config */
+    platform?: keyof typeof proto.ClientPayload.UserAgent.Platform;
     /** Initial pushName carried in the registration ClientPayload (used by mock servers for deterministic phone assignment). */
     pushName?: string;
     /** agent used for fetch requests -- uploading/downloading media */
